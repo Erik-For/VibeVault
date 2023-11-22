@@ -2,12 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon.ico') }}">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='popup.css') }}">
+    <script src="{{ url_for('static', filename='popup.js') }}"></script>
     <title>{% block title %}{% endblock %}</title>
     
     {% block head %}{% endblock %}
 </head>
     <body>
+        <div id="flash-messages">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="bg-green-500 flash-message">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
         {% block body %}{% endblock %}
     </body>
 </html>

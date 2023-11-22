@@ -21,8 +21,37 @@ def unauthorized():
 @login_required # makes sure the user is logged in
 def index():
     print(current_user)
-    return render_template()
+    return render_template("home.html.j2")
 
-@app.route("/login")
+#
+#Login related endpoints
+#
+
+@app.route("/login", methods=['GET', 'POST'])
 def login_page():
-    return render_template("login.html.j2")
+    if request.method == 'GET':        
+        return render_template("login.html.j2")
+    elif request.method == 'POST':
+        password = request.form['password']
+        email = request.form['email'].lower()
+        user = db.session.execute(db.select(User).where(User.email == email)).first()[0]
+        if user is None:
+            flash("Invalid email or password")
+            return redirect(url_for("login_page"))
+        if user.check_password(password) == False:
+            flash("Invalid email or password")
+            return redirect(url_for("login_page"))
+        else:
+            login_user(user)
+            flash("Login successful")
+            return redirect(url_for('index'))
+    
+
+@app.route("/login/forgot-password", methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == "GET":
+        return render_template("forgot_password.html.j2")
+
+#
+#
+#

@@ -1,0 +1,26 @@
+.flash-message {
+    margin: 2.5%;
+    width: fit-content;
+    text-wrap: nowrap;
+    padding: 10px;
+    color: #333;
+    border-radius: 3px;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 1.5s;
+}
+
+#flash-messages {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+}
+
+.hide {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.5s, opacity 0.5s linear;
+}
