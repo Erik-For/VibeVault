@@ -6,21 +6,23 @@ from app.models import User
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+#connect the flask_login library to the database User model
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
 
+# Redirect users to login page if not logged in
 @login_manager.unauthorized_handler
 def unauthorized():
     return redirect("/login")
 
-
+#index path
 @app.route("/")
-@login_required
+@login_required # makes sure the user is logged in
 def index():
     print(current_user)
-    return "Hello"
+    return render_template()
 
 @app.route("/login")
 def login_page():
-    return render_template("login.html")
+    return render_template("login.html.j2")
