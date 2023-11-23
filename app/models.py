@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
     email_verification_token = db.Column(db.String(32))
 
     def __init__(self, email, username, password):
-        self.email = email
+        self.email = email.lower()
         self.username = username
         self.display_name = username
         self.password = bcrypt.hashpw(str(password).encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -26,4 +26,4 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return bcrypt.checkpw(str(password).encode('utf-8'), self.password.encode('utf-8'))
-    
+   
