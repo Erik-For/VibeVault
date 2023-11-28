@@ -1,6 +1,8 @@
 from app import db
 from flask_login import UserMixin
 import bcrypt
+from datetime import datetime
+
 
 class User(db.Model, UserMixin):
     __tablename = "users"
@@ -26,4 +28,20 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return bcrypt.checkpw(str(password).encode('utf-8'), self.password.encode('utf-8'))
-   
+    
+# Add ability to follow artists
+    
+class Artist(db.Model):
+    __tablename__ = 'artists'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    contents = db.relationship('Content', backref='artist', lazy='dynamic')
+
+class Content(db.Model):
+    __tablename__ = 'contents'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(128), nullable=False)
+    release_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)

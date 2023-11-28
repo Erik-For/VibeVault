@@ -19,7 +19,6 @@ def unauthorized():
 @app.route("/")
 @login_required # makes sure the user is logged in
 def index():
-    print(current_user)
     return render_template("home.html.j2")
 
 #
@@ -33,11 +32,10 @@ def login_page():
     elif request.method == 'POST':
         password = request.form['password']
         email = request.form['email'].lower()   
-        user = db.session.execute(db.select(User).where(User.email == email)).first()
+        user = db.session.execute(db.select(User).where(User.email == email)).scalar_one_or_none()
         if user is None:
             flash("Invalid email or password")
             return redirect(url_for("login_page"))
-        user = user[0]
         if user.check_password(password) == False:
             flash("Invalid email or password")
             return redirect(url_for("login_page"))
