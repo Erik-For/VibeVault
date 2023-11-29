@@ -5,8 +5,6 @@ from flask_migrate import Migrate
 
 app = Flask(__name__)
 
-print(os.getenv('TEST'))
-
 app.config.update(
     MAIL_SERVER=os.getenv('MAIL_SERVER'),
     MAIL_PORT=587,

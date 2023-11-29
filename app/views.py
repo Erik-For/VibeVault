@@ -63,8 +63,16 @@ def stream_audio(file_path):
                 break
             yield data
 
-@app.route("/content/stream/")
+@app.route("/content/info/<id>")
 @login_required
-def stream_mp3():
-    file_path = "C:/Users/Elev/code/VibeVault/app/static/temp.mp3"
-    return Response(stream_with_context(stream_audio(file_path)), mimetype="audio/mpeg")  
+def content_info(id):
+    return id
+
+@app.route("/content/stream/<id>")
+@login_required
+def content_stream(id):
+    file_path = get_path(id)
+    return Response(stream_with_context(stream_audio(file_path)), mimetype="audio/mpeg")
+
+def get_path(id):
+    return os.getcwd() + "/app/static/temp.mp3"

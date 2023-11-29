@@ -48,11 +48,7 @@ audioPlayer.addEventListener('ended', () => {
 });
 
 function setSong(id) {
-    fetch("/content/", {
-        body: JSON.stringify({
-            id: id
-        })
-    })
+    fetch("/content/info/" + id)
         .then((response) => {
             
         })

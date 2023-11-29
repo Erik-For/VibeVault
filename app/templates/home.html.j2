@@ -38,7 +38,7 @@
             </div>
             <!-- audio player controls -->
             <audio id="audioPlayer">
-                <source id="audioSource" src="/content/stream/" type="audio/mpeg">
+                <source id="audioSource" src="/content/stream/5" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
             <div class="h-20 flex flex-row flex bg-gray-900 justify-between">
@@ -47,10 +47,10 @@
                         <div class="flex items-center justify-between h-16">
                             <!-- Left section: Song Information -->
                             <div class="flex items-center">
-                                <img class="w-12 h-12 mr-3" src="album_art_url">
+                                <img class="w-12 h-12 mr-3" src="{{ url_for('static', filename='default/cover.jpg') }}">
                                 <div>
-                                    <h3 class="text-lg font-semibold">Song Title</h3>
-                                    <p>Artist Name</p>
+                                    <h3 class="text-lg font-semibold">Play a song!</h3>
+                                    <p>VibeVault</p>
                                 </div>
                             </div>
                             <!-- Middle section: Playback Controls -->
