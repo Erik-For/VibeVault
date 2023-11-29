@@ -1,7 +1,8 @@
-from flask import request, redirect, url_for, render_template, flash, send_from_directory
+from flask import request, redirect, url_for, render_template, flash, send_from_directory, Response, stream_with_context
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from app import app, db
 from app.models import User
+import os
 
 login_manager = LoginManager(app)
 
@@ -51,5 +52,19 @@ def forgot_password():
         return render_template("forgot_password.html.j2")
 
 #
+#Music streaming and artist related endpoints
 #
-#
+
+def stream_audio(file_path):
+    with open(file_path, "rb") as audio_file:
+        while True:
+            data = audio_file.read(1024)
+            if not data:
+                break
+            yield data
+
+@app.route("/content/stream/")
+@login_required
+def stream_mp3():
+    file_path = "C:/Users/Elev/code/VibeVault/app/static/temp.mp3"
+    return Response(stream_with_context(stream_audio(file_path)), mimetype="audio/mpeg")  

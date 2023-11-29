@@ -11,10 +11,10 @@ const volumeControl = document.querySelector('input[type="range"]');
 playBtn.addEventListener('click', () => {
     if (audioPlayer.paused) {
         audioPlayer.play();
-        playBtn.firstElementChild.src = "/static/playing.svg"; // Update to your pause button
+        playBtn.firstElementChild.src = "/static/svg/playing.svg"; // Update to your pause button
     } else {
         audioPlayer.pause();
-        playBtn.firstElementChild.src = "/static/paused.svg"; // Update to your play button
+        playBtn.firstElementChild.src = "/static/svg/paused.svg"; // Update to your play button
     }
 });
 
@@ -43,6 +43,20 @@ volumeControl.addEventListener('input', (event) => {
 
 // Update UI when song ends
 audioPlayer.addEventListener('ended', () => {
-    playBtn.firstElementChild.src = "/static/paused.svg"; // Reset to play button
+    playBtn.firstElementChild.src = "/static/svg/paused.svg"; // Reset to play button
     // Also add logic if you want to automatically play the next song
 });
+
+function setSong(id) {
+    fetch("/content/", {
+        body: JSON.stringify({
+            id: id
+        })
+    })
+        .then((response) => {
+            
+        })
+        .then((json) => {
+
+        });
+}
