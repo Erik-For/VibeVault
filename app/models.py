@@ -2,6 +2,7 @@ from app import db
 from flask_login import UserMixin
 import bcrypt
 from datetime import datetime
+import secrets
 
 
 class User(db.Model, UserMixin):
@@ -19,6 +20,7 @@ class User(db.Model, UserMixin):
         self.username = username
         self.display_name = username
         self.password = bcrypt.hashpw(str(password).encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        self.email_verification_token = secrets.token_hex(32)[0:32-1]
 
     def is_admin(self):
         return (self.usertype >= 1)

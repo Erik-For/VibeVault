@@ -1,0 +1,26 @@
+{% for artist in artists %}
+    <div class="flex items-center hover:bg-gray-700 p-8 rounded cursor-pointer">
+        <div class="flex items-center">
+            <img class="w-12 h-12 mr-3" src="{{ url_for('profile_picture', filename=artist.id) }}">
+            <div class="flex-grow">
+                <h4 class="text-white text-lg">{{ artist.name }}</h4>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+{% for content_row in content %}
+    <div data-contentid="{{ content_row.id }}" onclick="handleClickSong(this);" class="flex items-center hover:bg-gray-700 p-2 rounded cursor-pointer">
+        <!-- Example of a single song item -->
+        
+        <div class="flex items-center">
+            <img class="w-12 h-12 mr-3" src="{{ url_for('static', filename='default/cover.jpg') }}" alt="Song Cover">
+            <div class="flex-grow">
+                <h4 class="text-white text-lg">{{ content_row.title }}</h4>
+                <p class="text-gray-400">{{ content_row.artist.name }}</p>
+            </div>
+        </div>
+        <!-- Repeat the above block for each song in the search results -->
+    </div>
+{% endfor %}
+<h1>{{ message }}</h1>
