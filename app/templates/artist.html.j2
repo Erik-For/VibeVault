@@ -1,0 +1,35 @@
+<div id="artistProfile" class="text-white px-4 py-4">
+    <!-- Artist Header -->
+    <div class="mb-8">
+        <div class="flex items-end space-x-6 bg-gray-800 px-4 py-6 rounded-lg">
+            <!-- Artist Image -->
+            <img src="{{ url_for('profile_picture', id=artist.id ) }}" class="w-24 h-24 rounded-full border-4 border-gray-800 shadow-lg">
+            <!-- Artist Info -->
+            <div>
+                <h1 class="text-3xl font-bold">{{ artist.name }}</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Artist Top Tracks -->
+    <div class="mb-8">
+        <h2 class="text-xl font-bold mb-4">Top Tracks</h2>
+        <div class="space-y-2">
+            <!-- List each track; repeat for each track available for the artist -->
+            {% for track in artist.contents %}
+            <div onclick="setSong({{track.id}});" class="mb-2 flex items-center bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer">
+                <!-- Example of a single song item -->
+                
+                <div class="flex items-center">
+                    <img class="w-12 h-12 mr-3" src="{{ url_for('contet_cover', id=track.id) }}" alt="Song Cover">
+                    <div class="flex-grow">
+                        <h4 class="text-white text-lg">{{ track.title }}</h4>
+                    </div>
+                </div>
+                <!-- Repeat the above block for each song in the search results -->
+            </div>
+            {% endfor %}
+            <!-- More tracks... -->
+        </div>
+    </div>
+</div>

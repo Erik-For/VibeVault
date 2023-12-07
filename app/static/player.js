@@ -1,105 +1,126 @@
 let isPlaying = false;
-var audioPlayer = document.getElementById('audioPlayer');
-var audioSource = document.getElementById('audioSource');
-const playBtn = document.getElementById('play-button'); // Replace with your actual play button selector
-const prevBtn = document.getElementById('prev-button'); // Replace with your actual previous button selector
-const nextBtn = document.getElementById('next-button'); // Replace with your actual next button selector
+const audioPlayer = document.getElementById('audioPlayer');
+const audioSource = document.getElementById('audioSource');
+const playBtn = document.getElementById('play-button');
+const prevBtn = document.getElementById('prev-button');
+const nextBtn = document.getElementById('next-button');
 const volumeControl = document.querySelector('input[type="range"]');
 
+function updatePlayButton(isPlaying) {
+    playBtn.firstElementChild.src = isPlaying ? "/static/svg/playing.svg" : "/static/svg/paused.svg";
+}
 
 function play() {
     audioPlayer.play();
-    playBtn.firstElementChild.src = "/static/svg/playing.svg"; // Update to your pause button
+    updatePlayButton(true);
 }
 
-function pause(){
+function pause() {
     audioPlayer.pause();
-    playBtn.firstElementChild.src = "/static/svg/paused.svg"; // Update to your play button
+    updatePlayButton(false);
 }
 
-// Play and Pause toggle
-playBtn.addEventListener('click', () => {
-    if (audioPlayer.paused) {
-        play()
-    } else {
-        pause()   
-    }
+// Attach click event handlers to buttons
+playBtn.addEventListener('click', function() {
+    isPlaying = !isPlaying;
+    isPlaying ? play() : pause();
 });
 
-// Previous Song
-prevBtn.addEventListener('click', () => {
-    // Implement logic to get the previous song URL
-    // For example, let prevSongUrl = 'path_to_previous_song.mp3';
-    audioSource.src = prevSongUrl;
+prevBtn.addEventListener('click', loadAndPlay.bind(null, 'prev'));
+nextBtn.addEventListener('click', loadAndPlay.bind(null, 'next'));
+
+function loadAndPlay(direction) {
+    // Replace these with the actual logic to get the prev/next song URL
+    const songUrl = direction === 'prev' ? 'path_to_previous_song.mp3' : 'path_to_next_song.mp3';
+    audioSource.src = songUrl;
     audioPlayer.load();
-    audioPlayer.play();
-});
-
-
-// Next Song
-nextBtn.addEventListener('click', () => {
-    // Implement logic to get the next song URL
-    // For example, let nextSongUrl = 'path_to_next_song.mp3';
-    audioSource.src = nextSongUrl;
-    audioPlayer.load();
-    audioPlayer.play();
-});
-
-// Volume Control
-volumeControl.addEventListener('input', (event) => {
-    audioPlayer.volume = event.target.value / 100;
-});
-
-// Update UI when song ends
-audioPlayer.addEventListener('ended', () => {
-    playBtn.firstElementChild.src = "/static/svg/paused.svg"; // Reset to play button
-    // Also add logic if you want to automatically play the next song
-});
-
-function setSong(id) {
-    audioSource.src = "/content/stream/" + id;
     play();
 }
 
-function updateDom(){
-    if (document.querySelector("#searchInput")) {
-        let searchInput = document.querySelector("#searchInput");
-        let timeout = null;
-    
-        searchInput.addEventListener("input", (element) => {
-            // Clear the existing timeout if there is one
-            clearTimeout(timeout);
-    
-            // Set a new timeout to trigger the search request if the user stops typing for a delay of 500ms
-            timeout = setTimeout(() => {
-                fetch("/search/", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        searchInput: element.target.value
-                    }),
-                    headers: {
-                        "Content-type": "application/json; charset=UTF-8"
-                    }
-                })
-                //.then(response => response.json()) // Assuming the server will return JSON
-                .then(data => {
-                    // Here you can update the UI with the search results
-                    data.text().then((data) => {
-                        document.getElementById("searchResult").innerHTML = data;
-                    })
-                })
-                .catch(error => {
-                    // Handle any errors here
-                    console.error('Error during fetch:', error);
-                });
-            }, 300); // Delay in milliseconds
-        });
-    }
+// Adjust volume
+volumeControl.addEventListener('input', function(event) {
+    audioPlayer.volume = event.target.value / 100;
+});
+
+// Reset play button to play state when the song ends
+audioPlayer.addEventListener('ended', function() {
+    updatePlayButton(false);
+    // Optionally, play the next song by invoking loadAndPlay:
+    // loadAndPlay('next');
+});
+
+function setSong(id) {
+    image = document.getElementById("playing-img");
+    playing_title = document.getElementById("playing-title");
+    artist = document.getElementById("playing-artist");
+    image.src = "/content/cover/" + id
+
+    fetch("/content/info/" + id)
+        .then(response => response.json())
+        .then((data) => {
+            playing_title.innerText = data.title;
+            artist.innerText = data.artist;
+        })
+
+    audioPlayer.pause();
+    audioSource.src = `/content/stream/${id}`;
+    audioPlayer.load();
+    play();
 }
 
-updateDom();
-
-function handleClickSong(song){
-    setSong(song.dataset.contentid);
-    console.log(song.dataset.contentid);
+function configureSearchInput(inputElement) {
+    let timeout = null;
+    inputElement.addEventListener("input", function(event) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => performSearch(event.target.value), 300);
+    });
 }
+
+function performSearch(searchValue) {
+    fetch("/search/", {
+        method: "POST",
+        body: JSON.stringify({ searchInput: searchValue }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+    .then(response => response.text())
+    .then(data => document.getElementById("searchResult").innerHTML = data)
+    .catch(console.error);
+}
+
+function updateContent(url, postUpdateAction) {
+    fetch(url)
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById("content").innerHTML = data;
+        if (postUpdateAction) postUpdateAction();
+    })
+    .catch(console.error);
+}
+
+function setHome() {
+    updateContent("/page/home");
+}
+
+function setSearch() {
+    updateContent("/page/search", () => {
+        const searchInput = document.querySelector("#searchInput");
+        if (searchInput) {
+            configureSearchInput(searchInput);
+        }
+    });
+}
+
+function setArtist(event, id) {
+    event.stopPropagation();
+    updateContent(`/page/artist/${id}`, () => {
+        const searchInput = document.querySelector("#searchInput");
+        if (searchInput) {
+            configureSearchInput(searchInput);
+        }
+    });
+}
+
+// Initialize home content
+setHome();

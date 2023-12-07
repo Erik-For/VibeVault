@@ -1,7 +1,7 @@
-from flask import request, redirect, url_for, render_template, flash, send_from_directory, Response, stream_with_context
+from flask import request, redirect, url_for, render_template, flash, send_from_directory, Response, stream_with_context, send_file, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from app import app, db
-from app.models import User, Artist, Content
+from app.models import User, Artist, Content, FeaturedContent, FeaturedArtists
 import os
 
 login_manager = LoginManager(app)
@@ -22,7 +22,27 @@ def unauthorized():
 @app.route("/")
 @login_required # makes sure the user is logged in
 def index():
-    return render_template("home.html.j2")
+    return render_template("index.html.j2")
+
+@app.route("/page/search")
+@login_required
+def search_page():
+    return render_template("search.html.j2")
+
+@app.route("/page/home")
+@login_required
+def home_page():
+    result = db.session.execute(db.select(Content)).scalars().fetchmany(5)
+    song_features = db.session.execute(db.select(FeaturedContent)).scalars().fetchmany(5)
+    artist_features = db.session.execute(db.select(FeaturedArtists)).scalars().fetchmany(5)
+    return render_template("home.html.j2", recent=result, song_features=song_features, artist_features=artist_features)
+
+@app.route("/page/artist/<id>")
+@login_required
+def artist_page(id):
+    artist = db.session.execute(db.select(Artist).filter(Artist.id == id)).fetchone()[0]
+    print(artist)
+    return render_template("artist.html.j2", artist=artist)
 
 #
 #Login related endpoints
@@ -65,36 +85,149 @@ def stream_audio(file_path):
                 break
             yield data
 
+
+@app.route("/search/", methods=["POST", "GET"])
+@login_required
+def search():
+    if request.method == "GET":
+        pass
+    elif request.method == "POST":
+        query = request.json["searchInput"]
+
+        if query == "":
+            return ""
+
+        artist = db.session.execute(db.select(Artist).where(Artist.name.like(f'%{query}%'))).scalars()
+        content = db.session.execute(db.select(Content).where(Content.title.like(f'%{query}%'))).scalars()
+        message = ""
+
+        return render_template("search_result.html.j2", artists=artist, content=content, message=message)
+
+def get_path(id):
+    return CONTENT_FOLDER + "/content/" + str(id) + "/content.mp3"
+
+
+@app.route("/artist/profile_picture/<id>")
+@login_required 
+def profile_picture(id):
+    return send_file(CONTENT_FOLDER + "/artist/" + id + "/picture.png")
+
+@app.route("/content/cover/<id>")
+@login_required 
+def contet_cover(id):
+    return send_file(CONTENT_FOLDER + "/content/" + id + "/cover.png")
+
 @app.route("/content/stream/<id>")
 @login_required
 def content_stream(id):
     file_path = get_path(id)
     return Response(stream_with_context(stream_audio(file_path)), mimetype="audio/mpeg")
 
-def get_path(id):
-    return os.getcwd() + "/app/static/temp.mp3"
-
-@app.route("/search/", methods=["POST"])
-@login_required
-def search():
-    query = request.json["searchInput"]
-
-    if query == "":
-        return ""
-
-    artist = db.session.execute(db.select(Artist).where(Artist.name.like(f'%{query}%'))).scalars()
-    content = db.session.execute(db.select(Content).where(Content.title.like(f'%{query}%'))).scalars()
-    
-    message = ""
-
-    #if len(content) == 0 and len(artist) == 0:
-    #    message = "Nothing found!"
-
-    return render_template("search_result.html.j2", artists=artist, content=content, message=message)
-
-@app.route("/content/profile_picture/<filename>")
+@app.route("/content/info/<id>")
 @login_required 
-def profile_picture(filename):
-    print(filename)
-    print(CONTENT_FOLDER + "/artist/" + filename + "/picture.png")
-    return send_from_directory(CONTENT_FOLDER + "artist/" + filename, "picture.png")
+def contet_info(id):
+    song = db.session.execute(db.select(Content).filter(Content.id == id)).first()[0]
+    return jsonify({"title": song.title, "artist": song.artist.name})
+
+#
+# Admin related endpoints
+#
+
+def allowed_picture(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png'}
+
+def allowed_sound(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'mp3'}
+
+@app.route("/admin/")
+@login_required
+def admin_artists():
+    if not current_user.is_admin():
+        flash('You do not have permission to view this page.', 'danger')
+        return redirect(url_for('index'))
+
+    artists = Artist.query.all()
+    return render_template("admin_artists.html.j2", artists=artists)
+
+@app.route("/admin/artists/add", methods=['GET', 'POST'])
+@login_required
+def admin_add_artist():
+    if not current_user.is_admin():
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        artist_name = request.form['artistName']
+        artist_picture = request.files['artistPicture']
+
+        if artist_picture and allowed_picture(artist_picture.filename):
+            # Create a new Artist
+            new_artist = Artist(name=artist_name)
+            db.session.add(new_artist)
+            db.session.commit()
+
+            # Save the profile picture with a unique filename
+
+            os.mkdir(CONTENT_FOLDER + '/artist/' + str(new_artist.id))
+            artist_picture_path = CONTENT_FOLDER + '/artist/' + str(new_artist.id) + '/picture.png'
+            artist_picture.save(artist_picture_path)
+
+            # Set the filename to the artist's profile image
+            db.session.commit()
+
+            flash(f'New artist {artist_name} added successfully.', 'success')
+        else:
+            flash('Invalid file format.', 'danger')
+        
+        return redirect(url_for('admin_artists'))
+
+    # GET request handling if needed, or return 405 Method Not Allowed
+    return redirect(url_for('admin_artists'))
+
+
+@app.route("/admin/artist/<int:artist_id>/songs", methods=['GET'])
+@login_required
+def admin_manage_artist_songs(artist_id):
+    if not current_user.is_admin():
+        flash('You do not have permission to view this page.', 'danger')
+        return redirect(url_for('index'))
+
+    artist = Artist.query.get_or_404(artist_id)
+    songs = Content.query.filter_by(artist_id=artist.id).all()
+
+    return render_template("admin_artist_songs.html.j2", artist=artist, songs=songs)
+
+# In your Flask app file
+@app.route("/admin/artist/<int:artist_id>/songs/add", methods=['POST'])
+@login_required
+def admin_add_song(artist_id):
+    if not current_user.is_admin():
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        song_title = request.form['songTitle']
+        song_audio_file = request.files['songFile']
+        song_cover_file = request.files['coverFile']
+
+        if song_audio_file and allowed_sound(song_audio_file.filename) and song_cover_file and allowed_picture(song_cover_file.filename):
+            new_content = Content(title=song_title, artist_id=artist_id)
+            db.session.add(new_content)
+            db.session.commit()
+
+            # Save the profile picture with a unique filename
+
+            os.mkdir(CONTENT_FOLDER + '/content/' + str(new_content.id))
+            content_sound_path = CONTENT_FOLDER + '/content/' + str(new_content.id) + '/content.mp3'
+            content_cover_path = CONTENT_FOLDER + '/content/' + str(new_content.id) + '/cover.png'
+            song_audio_file.save(content_sound_path)
+            song_cover_file.save(content_cover_path)
+            # Set the filename to the artist's profile image
+            db.session.commit()
+
+            flash(f'Song "{song_title}" successfully added to artist with ID #{artist_id}.', 'success')
+            return redirect(url_for('admin_manage_artist_songs', artist_id=artist_id))
+        else:
+            flash(f'Song "{song_title}"')
+
+    return redirect(url_for('admin_manage_artist_songs', artist_id=artist_id))

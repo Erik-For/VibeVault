@@ -17,7 +17,7 @@ app.config.update(
 app.secret_key = os.getenv('SECRET_KEY', secrets.token_hex())
 
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dbname.sqlite'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://music:password@localhost/vault'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost/vault'
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)

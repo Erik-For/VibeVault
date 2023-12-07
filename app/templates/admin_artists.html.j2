@@ -1,0 +1,75 @@
+
+{% extends "base.html.j2" %}
+
+{% block title %}
+Admin - Manage Artists
+{% endblock %}
+
+{% block body %}
+<div class="container mx-auto mt-4 p-4 bg-white shadow-lg">
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-xl font-bold">Artist Management</h1>
+        <button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" data-modal-toggle="add-artist-modal">Add Artist</button>
+    </div>
+    
+    <table class="min-w-full leading-normal">
+        <thead>
+            <tr>
+                <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Name
+                </th>
+                <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for artist in artists %}
+            <tr>
+                <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p class="text-gray-900 whitespace-no-wrap">{{ artist.name }}</p>
+                </td>
+                <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <a href="{{ url_for('admin_manage_artist_songs', artist_id=artist.id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Manage Songs</a>
+                    <!--<a href="#" class="text-blue-600 hover:text-blue-900">Edit</a>
+                    <a href="#" class="text-red-600 hover:text-red-900 ml-3">Delete</a>-->
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="add-artist-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Add New Artist</h3>
+                <form action="{{ url_for('admin_add_artist') }}" method="post" enctype="multipart/form-data">
+                    <div class="mt-4">
+                        <label for="artistName" class="block text-sm font-medium text-gray-700">Artist Name</label>
+                        <input type="text" id="artistName" name="artistName" class="px-4 py-2 w-full border rounded" required>
+                    </div>
+                    <div class="mt-4">
+                        <label for="artistPicture" class="block text-sm font-medium text-gray-700">Profile Picture</label>
+                        <input type="file" id="artistPicture" name="artistPicture" class="w-full" required>
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">Add Artist</button>
+                    </div>
+                </form>
+                <button class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50" data-modal-toggle="add-artist-modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Script to toggle modal
+document.querySelectorAll('[data-modal-toggle]').forEach((button) => {
+    button.addEventListener('click', (e) => {
+        const modalId = button.getAttribute('data-modal-toggle');
+        const modal = document.getElementById(modalId);
+        modal.classList.toggle('hidden');
+    });
+});
+</script>
+{% endblock %}

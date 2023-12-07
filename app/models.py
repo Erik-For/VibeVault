@@ -47,3 +47,19 @@ class Content(db.Model):
     title = db.Column(db.String(128), nullable=False)
     release_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
+
+class FeaturedContent(db.Model):
+    __tablename__ = 'featured_content'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    content_id = db.Column(db.Integer, db.ForeignKey('contents.id'), nullable=False)
+    # Relationship to access the associated content
+    content = db.relationship('Content', backref=db.backref('featured_content', uselist=False))
+
+class FeaturedArtists(db.Model):
+    __tablename__ = 'featured_artists'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
+    # Relationship to access the associated content
+    artist = db.relationship('Artist', backref=db.backref('featured_artists', uselist=False))
