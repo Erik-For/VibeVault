@@ -8,6 +8,7 @@ Admin - Manage Artists
 {% block body %}
 <div class="container mx-auto mt-4 p-4 bg-white shadow-lg">
     <div class="flex justify-between items-center mb-4">
+        <a href="{{ url_for('admin') }}" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 mb-4">Back</a>
         <h1 class="text-xl font-bold">Artist Management</h1>
         <button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" data-modal-toggle="add-artist-modal">Add Artist</button>
     </div>
@@ -31,8 +32,8 @@ Admin - Manage Artists
                 </td>
                 <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <a href="{{ url_for('admin_manage_artist_songs', artist_id=artist.id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Manage Songs</a>
-                    <!--<a href="#" class="text-blue-600 hover:text-blue-900">Edit</a>
-                    <a href="#" class="text-red-600 hover:text-red-900 ml-3">Delete</a>-->
+                    <!--<a href="#" class="text-blue-600 hover:text-blue-900">Edit</a>-->
+                    <a href="{{ url_for('remove_artist', id=artist.id)}}" class="text-red-600 hover:text-red-900 ml-3">Delete</a>
                 </td>
             </tr>
             {% endfor %}

@@ -33,6 +33,16 @@ class User(db.Model, UserMixin):
     
 # Add ability to follow artists
     
+class Invite(db.Model):
+    __tablename__ = 'invites'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True)
+    email_verification_token = db.Column(db.String(32))
+
+    def __init__(self, email):
+        self.email = email
+        self.email_verification_token = secrets.token_hex(32)[0:32-1]
+
 class Artist(db.Model):
     __tablename__ = 'artists'
     
@@ -54,7 +64,7 @@ class FeaturedContent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content_id = db.Column(db.Integer, db.ForeignKey('contents.id'), nullable=False)
     # Relationship to access the associated content
-    content = db.relationship('Content', backref=db.backref('featured_content', uselist=False))
+    content = db.relationship('Content', backref=db.backref('featured_content', uselist=False, cascade="all, delete"))
 
 class FeaturedArtists(db.Model):
     __tablename__ = 'featured_artists'
@@ -62,4 +72,4 @@ class FeaturedArtists(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
     # Relationship to access the associated content
-    artist = db.relationship('Artist', backref=db.backref('featured_artists', uselist=False))
+    artist = db.relationship('Artist', backref=db.backref('featured_artists', uselist=False, cascade="all, delete"))

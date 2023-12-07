@@ -125,7 +125,11 @@ function setArtist(event, id) {
 }
 
 audioPlayer.ontimeupdate = function() {
-    progressBar.value = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+    value = (audioPlayer.currentTime / audioPlayer.duration) * 100
+    if (isNaN(value)) {
+        return;
+    }
+    progressBar.value = value;
 };
 
 // Seek in the audio when the progress bar is clicked or dragged

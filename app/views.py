@@ -1,7 +1,8 @@
 from flask import request, redirect, url_for, render_template, flash, send_from_directory, Response, stream_with_context, send_file, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from app import app, db
-from app.models import User, Artist, Content, FeaturedContent, FeaturedArtists
+from app import app, db, mail
+from app.models import User, Artist, Content, FeaturedContent, FeaturedArtists, Invite
+from flask_mail import Mail, Message
 import os
 
 login_manager = LoginManager(app)
@@ -145,7 +146,6 @@ def content_stream(id):
         response.headers['Content-Length'] = str(length)
         response.headers['Accept-Ranges'] = 'bytes'
         response.headers['Cache-Control'] = 'no-cache'
-        print(end, file_size)
     response.status_code = 206
 
     return response
@@ -168,6 +168,14 @@ def allowed_sound(filename):
 
 @app.route("/admin/")
 @login_required
+def admin():
+    if not current_user.is_admin():
+        flash('You do not have permission to view this page.', 'danger')
+        return redirect(url_for('index'))
+    return render_template("admin.html.j2")
+
+@app.route("/admin/artist/")
+@login_required
 def admin_artists():
     if not current_user.is_admin():
         flash('You do not have permission to view this page.', 'danger')
@@ -176,39 +184,46 @@ def admin_artists():
     artists = Artist.query.all()
     return render_template("admin_artists.html.j2", artists=artists)
 
-@app.route("/admin/artists/add", methods=['GET', 'POST'])
+@app.route("/admin/artist/add", methods=['POST'])
 @login_required
 def admin_add_artist():
     if not current_user.is_admin():
         flash('You do not have permission to perform this action.', 'danger')
         return redirect(url_for('index'))
 
-    if request.method == 'POST':
-        artist_name = request.form['artistName']
-        artist_picture = request.files['artistPicture']
+    artist_name = request.form['artistName']
+    artist_picture = request.files['artistPicture']
 
-        if artist_picture and allowed_picture(artist_picture.filename):
-            # Create a new Artist
-            new_artist = Artist(name=artist_name)
-            db.session.add(new_artist)
-            db.session.commit()
+    if artist_picture and allowed_picture(artist_picture.filename):
+        # Create a new Artist
+        new_artist = Artist(name=artist_name)
+        db.session.add(new_artist)
+        db.session.commit()
 
-            # Save the profile picture with a unique filename
+        # Save the profile picture with a unique filename
 
-            os.mkdir(CONTENT_FOLDER + '/artist/' + str(new_artist.id))
-            artist_picture_path = CONTENT_FOLDER + '/artist/' + str(new_artist.id) + '/picture.png'
-            artist_picture.save(artist_picture_path)
+        os.mkdir(CONTENT_FOLDER + '/artist/' + str(new_artist.id))
+        artist_picture_path = CONTENT_FOLDER + '/artist/' + str(new_artist.id) + '/picture.png'
+        artist_picture.save(artist_picture_path)
 
-            # Set the filename to the artist's profile image
-            db.session.commit()
+        # Set the filename to the artist's profile image
+        db.session.commit()
 
-            flash(f'New artist {artist_name} added successfully.', 'success')
-        else:
-            flash('Invalid file format.', 'danger')
-        
-        return redirect(url_for('admin_artists'))
+        flash(f'New artist {artist_name} added successfully.', 'success')
+    else:
+        flash('Invalid file format.', 'danger')        
+    return redirect(url_for('admin_artists'))
 
-    # GET request handling if needed, or return 405 Method Not Allowed
+@app.route("/admin/artist/remove/<id>", methods=['GET'])
+@login_required
+def remove_artist(id):
+    if not current_user.is_admin():
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('index'))
+    artist = db.get_or_404(Artist, id)
+    db.session.delete(artist)
+    db.session.commit()
+    flash('Artist removed successfully.')
     return redirect(url_for('admin_artists'))
 
 
@@ -258,3 +273,61 @@ def admin_add_song(artist_id):
             flash(f'Song "{song_title}"')
 
     return redirect(url_for('admin_manage_artist_songs', artist_id=artist_id))
+
+
+@app.route("/admin/artist/<int:artist_id>/songs/remove/<id>", methods=['GET'])
+@login_required
+def admin_remove_song(artist_id, id):
+    if not current_user.is_admin():
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('index'))
+    content = db.get_or_404(Content, id)
+    db.session.delete(content)
+    db.session.commit()
+    return redirect(url_for('admin_manage_artist_songs', artist_id=artist_id))
+
+
+@app.route("/admin/users")
+@login_required
+def admin_users():
+    if not current_user.is_super_user():
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('index'))
+    
+    users = db.session.execute(db.select(User)).scalars()
+    return render_template("admin_users.html.j2", users=users)
+
+@app.route("/admin/users/invite", methods=["POST"])
+@login_required
+def invite_user():
+    if not current_user.is_super_user():
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('index'))
+    email = request.form["email"]
+    invite = Invite(email)
+    db.session.add(invite)
+    db.session.commit()
+    msg = Message(
+         subject="Invite to VibeVault",
+         recipients=[email],
+         body=f"Click this link to verify your email: http://217.31.190.237/invite/{invite.email_verification_token}",
+     )
+    mail.send(msg)
+    return redirect(url_for("admin_users"))
+
+@app.route("/invite/<token>", methods=["GET", "POST"])
+def accept_invite(token):
+    print(token)
+    invite = db.session.execute(db.select(Invite).where(Invite.email_verification_token == token)).scalar_one_or_none()
+    if(invite != None):
+        if request.method == "GET":
+            return render_template("invite.html.j2", email=invite.email, action=url_for("accept_invite", token=token))
+        elif request.method == "POST":
+            username = request.form["username"]
+            password = request.form["password"]
+            user = User(invite.email, username, password)
+            db.session.add(user)
+            db.session.commit()
+            flash("Created an account, Enjoy!")
+            return redirect(url_for("login_page"))
+    return ""
