@@ -43,7 +43,7 @@ VibeVault - Home
                 </div>
             </div>
             <!-- audio player controls -->
-            <audio id="audioPlayer">
+            <audio id="audioPlayer" preload="none">
                 <source id="audioSource" src="" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
@@ -60,16 +60,21 @@ VibeVault - Home
                                 </div>
                             </div>
                             <!-- Middle section: Playback Controls -->
-                            <div class="flex items-center">
-                                <button id="prev-button" class="mx-2">
-                                    <img src="{{ url_for('static', filename='svg/prev.svg')}}" class="w-10 h-10 active:scale-90">
-                                </button>
-                                <button id="play-button" class="mx-2">
-                                    <img id="playPauseIcon" src="{{ url_for('static', filename='svg/paused.svg') }}" class="w-8 h-8 active:scale-90">
-                                </button>
-                                <button id="next-button" class="mx-2">
-                                    <img src="{{ url_for('static', filename='svg/skip.svg')}}" class="w-10 h-10 active:scale-90">
-                                </button>
+                            <div class="flex-grow flex flex-col justify-center">
+                                <div class="flex items-center justify-center">
+                                    <button id="prev-button" class="mx-2">
+                                        <img src="{{ url_for('static', filename='svg/prev.svg')}}" class="w-10 h-10 active:scale-90">
+                                    </button>
+                                    <button id="play-button" class="mx-2">
+                                        <img id="playPauseIcon" src="{{ url_for('static', filename='svg/paused.svg') }}" class="w-8 h-8 active:scale-90">
+                                    </button>
+                                    <button id="next-button" class="mx-2">
+                                        <img src="{{ url_for('static', filename='svg/skip.svg')}}" class="w-10 h-10 active:scale-90">
+                                    </button>
+                                </div>
+                                <div id="progress-container" class="px-16 relative flex-1 cursor-pointer">
+                                    <input type="range" id="progress-bar" class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer" min="0" value="0">
+                                </div>
                             </div>
                             <!-- Right section: Volume & Other Controls -->
                             <div class="flex items-center">
@@ -77,7 +82,7 @@ VibeVault - Home
                                     <img src="{{ url_for('static', filename='svg/volume.svg') }}" class="w-6 h-6">
                                 </button>
                                 <div class="w-32">
-                                    <input type="range" class="cursor-pointer">
+                                    <input id="volume" type="range" class="cursor-pointer">
                                 </div>
                             </div>
                         </div>

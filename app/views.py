@@ -77,15 +77,6 @@ def forgot_password():
 #Music streaming and artist related endpoints
 #
 
-def stream_audio(file_path):
-    with open(file_path, "rb") as audio_file:
-        while True:
-            data = audio_file.read(1024)
-            if not data:
-                break
-            yield data
-
-
 @app.route("/search/", methods=["POST", "GET"])
 @login_required
 def search():
@@ -117,11 +108,47 @@ def profile_picture(id):
 def contet_cover(id):
     return send_file(CONTENT_FOLDER + "/content/" + id + "/cover.png")
 
+# @app.route("/content/stream/<id>")
+# @login_required
+# def content_stream(id):
+#     file_path = get_path(id)
+#     response = Response(stream_with_context(stream_audio(file_path)), mimetype="audio/mpeg")
+#     return response
+def stream_audio(file_path, start, length):
+    with open(file_path, "rb") as audio_file:
+        while True:
+            audio_file.seek(start)
+            data = audio_file.read(length)
+            if not data:
+                break
+            yield data
+
+
 @app.route("/content/stream/<id>")
 @login_required
 def content_stream(id):
     file_path = get_path(id)
-    return Response(stream_with_context(stream_audio(file_path)), mimetype="audio/mpeg")
+    file_size = os.path.getsize(file_path)
+    
+    # Range header support for partial content
+    range_header = request.headers.get('Range', None)
+    if not range_header:
+        response = Response(stream_with_context(stream_audio(file_path, 0, 1024)), mimetype="audio/mpeg")
+        response.headers['Content-Length'] = 1024
+    else:
+        start, end = range_header.replace('bytes=', '').split('-')
+        start = int(start)
+        end = int(end) if end else file_size - 1
+        length = end - start + 1
+        response = Response(stream_with_context(stream_audio(file_path, start, length)), mimetype="audio/mpeg")
+        response.headers['Content-Range'] = f'bytes {start}-{end}/{file_size}'
+        response.headers['Content-Length'] = str(length)
+        response.headers['Accept-Ranges'] = 'bytes'
+        response.headers['Cache-Control'] = 'no-cache'
+        print(end, file_size)
+    response.status_code = 206
+
+    return response
 
 @app.route("/content/info/<id>")
 @login_required 

@@ -1,33 +1,18 @@
 <div id="homeContent" class="text-white px-4">
-    <!-- Recently Played Section -->
-    <!--
-    <div class="mb-8">
-        <h2 class="text-xl font-bold mb-4">Recently Played</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {% for song in recent %}
-                <div style="background-color: #283240;" class="rounded-lg p-4 shadow-lg h-auto max-h-72 overflow-hidden">
-                    <img src="{{ url_for('static', filename='default/cover.jpg') }}" alt="Album Cover" class="w-full h-40 object-cover rounded mb-2">
-                    <h3 class="text-sm font-semibold truncate">{{ song.title }}</h3>
-                    <a onclick="setArtist({{ song.artist.id }})" class="text-xs truncate">{{ song.artist.name }}</a>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-    -->
     <div class="mb-8">
         <h2 class="text-xl font-bold mb-4">Featured Artists</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {% for feature in artist_features %}
                 <div onclick="setArtist(event,{{ feature.artist.id }})" style="background-color: #283240;" class="bg-gray-900 rounded-lg p-4 shadow-lg h-auto max-h-72 overflow-hidden">
                     <img src="{{ url_for('profile_picture', id=feature.artist.id) }}" class="w-full h-40 object-cover rounded mb-2">
-                    <h3 class="text-sm font-semibold truncate">{{ feature.artist.name }}</h3>
+                    <h2 class="text-sm font-semibold truncate">{{ feature.artist.name }}</h2>
                 </div>
             {% endfor %}
         </div>
     </div>
 
     <div class="mb-8">
-        <h2 class="text-xl font-bold mb-4">Featured Songs</h2>
+        <h2 class="text-xl font-bold mb-4">Featured Content</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {% for feature in song_features %}
                 <div onclick="setSong({{ feature.content.id }})" style="background-color: #283240;" class="bg-gray-900 rounded-lg p-4 shadow-lg h-auto max-h-72 overflow-hidden">
@@ -38,18 +23,4 @@
             {% endfor %}
         </div>
     </div>
-
-    <!--
-    <div>
-        <h2 class="text-xl font-bold mb-4">Recommended for You</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-
-            <div class="bg-gray-800 rounded-lg p-4 shadow-lg h-auto max-h-72 overflow-hidden">
-                <img src="{{ url_for('static', filename='default/cover.jpg') }}" alt="Album Cover" class="w-full h-40 object-cover rounded mb-2">
-                <h3 class="text-sm font-semibold truncate">Album Title</h3>
-                <p class="text-xs truncate">Artist Name</p>
-            </div>
-        </div>
-    </div>
-    -->
 </div>

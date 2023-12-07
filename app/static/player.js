@@ -1,10 +1,11 @@
 let isPlaying = false;
 const audioPlayer = document.getElementById('audioPlayer');
+const progressBar = document.getElementById('progress-bar');
 const audioSource = document.getElementById('audioSource');
 const playBtn = document.getElementById('play-button');
 const prevBtn = document.getElementById('prev-button');
 const nextBtn = document.getElementById('next-button');
-const volumeControl = document.querySelector('input[type="range"]');
+const volumeControl = document.getElementById('volume');
 
 function updatePlayButton(isPlaying) {
     playBtn.firstElementChild.src = isPlaying ? "/static/svg/playing.svg" : "/static/svg/paused.svg";
@@ -50,6 +51,7 @@ audioPlayer.addEventListener('ended', function() {
 });
 
 function setSong(id) {
+    isPlaying = true;
     image = document.getElementById("playing-img");
     playing_title = document.getElementById("playing-title");
     artist = document.getElementById("playing-artist");
@@ -121,6 +123,16 @@ function setArtist(event, id) {
         }
     });
 }
+
+audioPlayer.ontimeupdate = function() {
+    progressBar.value = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+};
+
+// Seek in the audio when the progress bar is clicked or dragged
+progressBar.addEventListener('input', function() {
+    const time = (progressBar.value * audioPlayer.duration) / 100;
+    audioPlayer.currentTime = time;
+});
 
 // Initialize home content
 setHome();
