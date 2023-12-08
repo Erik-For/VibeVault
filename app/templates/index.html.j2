@@ -32,7 +32,7 @@ VibeVault - Home
                             {% if current_user.is_admin() %}
                             <div class="active:scale-90 cursor-pointer flex justify-center">
                                     <a href="{{ url_for('admin') }}">
-                                    
+                                        <img class="p-1" width="50" height="50" src="{{ url_for('static', filename='svg/admin.svg') }}">
                                     </a>
                                 </div>
                             {% endif %}
