@@ -22,6 +22,10 @@ app.secret_key = os.getenv('SECRET_KEY', secrets.token_hex())
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dbname.sqlite'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@127.0.0.1/vault'
 
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'pool_pre_ping': True,
+}
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 

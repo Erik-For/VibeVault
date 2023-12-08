@@ -42,7 +42,6 @@ def home_page():
 @login_required
 def artist_page(id):
     artist = db.session.execute(db.select(Artist).filter(Artist.id == id)).fetchone()[0]
-    print(artist)
     return render_template("artist.html.j2", artist=artist)
 
 #
@@ -310,14 +309,13 @@ def invite_user():
     msg = Message(
          subject="Invite to VibeVault",
          recipients=[email],
-         body=f"Click this link to verify your email: http://217.31.190.237/invite/{invite.email_verification_token}",
+         body=f"Click this link to verify your email: https://vibevault.se/invite/{invite.email_verification_token}",
      )
     mail.send(msg)
     return redirect(url_for("admin_users"))
 
 @app.route("/invite/<token>", methods=["GET", "POST"])
 def accept_invite(token):
-    print(token)
     invite = db.session.execute(db.select(Invite).where(Invite.email_verification_token == token)).scalar_one_or_none()
     if(invite != None):
         if request.method == "GET":
