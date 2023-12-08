@@ -19,9 +19,11 @@ Admin - Manage Artists
         <a href="{{ url_for('admin_artists') }}" class="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150 ease-in-out focus:outline-none focus:shadow-outline" type="button">
             Manage artists
         </a>
+        {% if current_user.is_super_user() %}
         <a href="{{ url_for('admin_users') }}" class="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150 ease-in-out focus:outline-none focus:shadow-outline" type="button">
             Manage users
         </a>
+        {% endif %}
     </div>
     
 </div>

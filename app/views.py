@@ -116,12 +116,7 @@ def contet_cover(id):
 #     return response
 def stream_audio(file_path, start, length):
     with open(file_path, "rb") as audio_file:
-        while True:
-            audio_file.seek(start)
-            data = audio_file.read(length)
-            if not data:
-                break
-            yield data
+        yield audio_file.read(length)
 
 
 @app.route("/content/stream/<id>")
