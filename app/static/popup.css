@@ -24,3 +24,14 @@
     opacity: 0;
     transition: visibility 0s 0.5s, opacity 0.5s linear;
 }
+
+.modal-fullscreen {
+    width: 80%;
+}
+.modal-darkmode {
+    background-color: #1a1a1a; /* Dark background color */
+    color: white; /* Light text color for contrast */
+}
+.bg-smoke-dark {
+    background-color: rgba(0, 0, 0, 0.9); /* Darker background overlay */
+}

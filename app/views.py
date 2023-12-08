@@ -312,6 +312,12 @@ def invite_user():
         flash('You do not have permission to perform this action.', 'danger')
         return redirect(url_for('index'))
     email = request.form["email"]
+    if db.session.execute(db.select(User).where(User.email == email)).scalar_one_or_none() != None:
+        flash(f"User with that email already exists.")
+        return redirect(url_for("admin_users"))
+    if db.session.execute(db.select(Invite).where(Invite.email == email)).scalar_one_or_none() != None:
+        flash(f"Email invite already issued, <a class='underline' href='{url_for('resend_invite', email=email)}'>Resend email</a>")
+        return redirect(url_for("admin_users"))
     invite = Invite(email)
     db.session.add(invite)
     db.session.commit()
@@ -322,6 +328,26 @@ def invite_user():
     )
     mail.send(msg)
     return redirect(url_for("admin_users"))
+
+@app.route("/admin/users/resend_invite_email/<email>", methods=["GET"])
+@login_required
+def resend_invite(email):
+    if not current_user.is_super_user():
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('index'))
+    invite = db.session.execute(db.select(Invite).where(Invite.email == email)).scalar_one_or_none()
+    if invite != None:
+        msg = Message(
+            subject="Invite to VibeVault",
+            recipients=[email],
+            body=f"Click this link to verify your email: https://vibevault.se/invite/{invite.email_verification_token}",
+        )
+        mail.send(msg)
+        flash("Resent email")
+        return redirect(url_for("admin_users"))
+    else:
+        flash("Invite not found")
+        return redirect(url_for("admin_users"))
 
 @app.route("/invite/<token>", methods=["GET", "POST"])
 def accept_invite(token):

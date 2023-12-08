@@ -1,21 +1,15 @@
-<div id="add-artist-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div class="mt-3 text-center">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Add New Artist</h3>
-            <form action="{{ url_for('admin_add_artist') }}" method="post" enctype="multipart/form-data">
-                <div class="mt-4">
-                    <label for="artistName" class="block text-sm font-medium text-gray-700">Artist Name</label>
-                    <input type="text" id="artistName" name="artistName" class="px-4 py-2 w-full border rounded" required>
-                </div>
-                <div class="mt-4">
-                    <label for="artistPicture" class="block text-sm font-medium text-gray-700">Profile Picture</label>
-                    <input type="file" id="artistPicture" name="artistPicture" class="w-full" required>
-                </div>
-                <div class="mt-4">
-                    <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">Add Artist</button>
-                </div>
-            </form>
-            <button class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50" data-modal-toggle="add-artist-modal">Cancel</button>
-        </div>
+<div id="songQueueModal" class="hidden fixed inset-0 z-10 bg-gray-900 bg-opacity-80 flex items-center justify-center px-4 py-6">
+  <div class="bg-gray-800 w-4/5 h-4/5 p-8 overflow-auto rounded-lg">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-bold text-white">Song Queue</h3>
+      <button id="closeQueueModal" class="text-gray-300 text-2xl leading-none hover:text-white">&times;</button>
     </div>
+    <hr class="border-gray-700 my-3">
+    <div id="songQueueList" class="overflow-y-auto text-white">
+      <!-- Song items will be dynamically inserted here -->
+    </div>
+    <div class="mt-4 flex justify-end">
+      <button id="clearQueue" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Clear Queue</button>
+    </div>
+  </div>
 </div>
