@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
         self.email = email.lower()
         self.username = username
         self.display_name = username
-        self.password = bcrypt.hashpw(str(password).encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        self.set_password(password)
 
     def is_admin(self):
         return (self.usertype >= 1)
@@ -27,6 +27,9 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return bcrypt.checkpw(str(password).encode('utf-8'), self.password.encode('utf-8'))
+    
+    def set_password(self, password):
+        self.password = bcrypt.hashpw(str(password).encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     
 # Add ability to follow artists
     
@@ -39,6 +42,17 @@ class Invite(db.Model):
     def __init__(self, email):
         self.email = email
         self.email_verification_token = secrets.token_hex(32)[0:32-1]
+
+class ResetPassword(db.Model):
+    __tablename__ = 'password_reset_tokens'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True)
+    email_verification_token = db.Column(db.String(32))
+
+    def __init__(self, email):
+        self.email = email
+        self.email_verification_token = secrets.token_hex(32)[0:32-1]
+
 
 class Artist(db.Model):
     __tablename__ = 'artists'

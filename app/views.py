@@ -1,7 +1,7 @@
 from flask import request, redirect, url_for, render_template, flash, send_from_directory, Response, stream_with_context, send_file, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from app import app, db, mail
-from app.models import User, Artist, Content, FeaturedContent, FeaturedArtists, Invite
+from app.models import User, Artist, Content, FeaturedContent, FeaturedArtists, Invite, ResetPassword
 from flask_mail import Mail, Message
 import os
 
@@ -72,6 +72,28 @@ def login_page():
 def forgot_password():
     if request.method == "GET":
         return render_template("forgot_password.html.j2")
+    if request.method == "POST":
+        email = request.form["email"]
+        if db.session.execute(db.select(User).filter(User.email == email)).scalar_one_or_none() != None:
+            reset_password = ResetPassword(email)
+            db.session.add(reset_password)
+            db.session.commit()
+            flash("test")
+            if app.debug:
+                msg = Message(
+                    subject="Invite to VibeVault",
+                    recipients=[email],
+                    body=f"Click this link to verify your email: https://localhost:5000/reset_password/{reset_password.email_verification_token}",
+                )
+            else:
+                msg = Message(
+                    subject="Invite to VibeVault",
+                    recipients=[email],
+                    body=f"Click this link to verify your email: https://vibevault.se/reset_password/{reset_password.email_verification_token}",
+                )
+            mail.send(msg)
+        flash("Sent Password    -Recovery Email!")
+        return redirect(url_for('forgot_password'))
 
 #
 #Music streaming and artist related endpoints
@@ -301,11 +323,18 @@ def invite_user():
     invite = Invite(email)
     db.session.add(invite)
     db.session.commit()
-    msg = Message(
-         subject="Invite to VibeVault",
-         recipients=[email],
-         body=f"Click this link to verify your email: https://vibevault.se/invite/{invite.email_verification_token}",
-     )
+    if app.debug:
+        msg = Message(
+            subject="Invite to VibeVault",
+            recipients=[email],
+            body=f"Click this link to verify your email: https://localhost:5000 /invite/{invite.email_verification_token}",
+        )
+    else:
+        msg = Message(
+            subject="Invite to VibeVault",
+            recipients=[email],
+            body=f"Click this link to verify your email: https://vibevault.se/invite/{invite.email_verification_token}",
+        )
     mail.send(msg)
     return redirect(url_for("admin_users"))
 
@@ -320,6 +349,26 @@ def accept_invite(token):
             password = request.form["password"]
             user = User(invite.email, username, password)
             db.session.add(user)
+            db.session.delete(invite)
+            db.session.commit()
+            flash("Created an account, Enjoy!")
+            login_user(user)
+            return redirect(url_for("login_page"))
+    return ""
+
+@app.route("/reset_password/<token>", methods=["POST", "GET"])
+def reset_password(token):
+    invite = db.session.execute(db.select(ResetPassword).where(ResetPassword.email_verification_token == token)).scalar_one_or_none()
+    if(invite != None):
+        if request.method == "GET":
+            return render_template("reset_password.html.j2", action=url_for("reset_password", token=token))
+        elif request.method == "POST":
+            password = request.form["password"]
+            user = db.session.execute(db.select(User).filter(User.email == invite.email)).scalar_one_or_none()
+            if user is None:
+                flash("Somthing went wrong );")
+                return redirect(url_for("login_page")) 
+            user.set_password(password)
             db.session.delete(invite)
             db.session.commit()
             flash("Created an account, Enjoy!")
