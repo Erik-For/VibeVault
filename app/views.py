@@ -325,6 +325,7 @@ def accept_invite(token):
             password = request.form["password"]
             user = User(invite.email, username, password)
             db.session.add(user)
+            db.session.delete(invite)
             db.session.commit()
             flash("Created an account, Enjoy!")
             return redirect(url_for("login_page"))
