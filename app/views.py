@@ -78,19 +78,11 @@ def forgot_password():
             reset_password = ResetPassword(email)
             db.session.add(reset_password)
             db.session.commit()
-            flash("test")
-            if app.debug:
-                msg = Message(
-                    subject="Invite to VibeVault",
-                    recipients=[email],
-                    body=f"Click this link to verify your email: https://localhost:5000/reset_password/{reset_password.email_verification_token}",
-                )
-            else:
-                msg = Message(
-                    subject="Invite to VibeVault",
-                    recipients=[email],
-                    body=f"Click this link to verify your email: https://vibevault.se/reset_password/{reset_password.email_verification_token}",
-                )
+            msg = Message(
+                subject="Invite to VibeVault",
+                recipients=[email],
+                body=f"Click this link to verify your email: https://vibevault.se/reset_password/{reset_password.email_verification_token}",
+            )
             mail.send(msg)
         flash("Sent Password    -Recovery Email!")
         return redirect(url_for('forgot_password'))
@@ -323,18 +315,11 @@ def invite_user():
     invite = Invite(email)
     db.session.add(invite)
     db.session.commit()
-    if app.debug:
-        msg = Message(
-            subject="Invite to VibeVault",
-            recipients=[email],
-            body=f"Click this link to verify your email: https://localhost:5000 /invite/{invite.email_verification_token}",
-        )
-    else:
-        msg = Message(
-            subject="Invite to VibeVault",
-            recipients=[email],
-            body=f"Click this link to verify your email: https://vibevault.se/invite/{invite.email_verification_token}",
-        )
+    msg = Message(
+        subject="Invite to VibeVault",
+        recipients=[email],
+        body=f"Click this link to verify your email: https://vibevault.se/invite/{invite.email_verification_token}",
+    )
     mail.send(msg)
     return redirect(url_for("admin_users"))
 
