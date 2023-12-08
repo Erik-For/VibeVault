@@ -7,6 +7,8 @@ const prevBtn = document.getElementById('prev-button');
 const nextBtn = document.getElementById('next-button');
 const volumeControl = document.getElementById('volume');
 
+var queue = []
+
 function updatePlayButton(isPlaying) {
     playBtn.firstElementChild.src = isPlaying ? "/static/svg/playing.svg" : "/static/svg/paused.svg";
 }
