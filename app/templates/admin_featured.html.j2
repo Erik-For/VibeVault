@@ -106,15 +106,18 @@ function openNewContentFeature(){
 function removeArtistFeature(id) {
     fetch("/admin/featured/artists/remove/" + id, {
         method: 'POST'
+    }).then(() => {
+        location.reload();
     })
-    location.reload();
+
 }
 
 function removeContenteature(id) {
     fetch("/admin/featured/content/remove/" + id, {
         method: 'POST'
+    }).then(() => {
+        location.reload();
     })
-    location.reload();
 }
 </script>
 {% endblock %}
