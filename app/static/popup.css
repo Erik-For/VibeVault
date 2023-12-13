@@ -35,3 +35,19 @@
 .bg-smoke-dark {
     background-color: rgba(0, 0, 0, 0.9); /* Darker background overlay */
 }
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #283240;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #111827;
+  }
+  
