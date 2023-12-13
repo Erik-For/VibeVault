@@ -23,10 +23,10 @@ body {
       <nav>
         <ul class="list-none">
           <li onclick="setHome()" class="mb-4">
-            <a href="#" class="active:scale-90 cursor-pointer text-white hover:text-green-500">Home</a>
+            <a class="active:scale-90 cursor-pointer text-white hover:text-green-500">Home</a>
           </li>
-          <li class="mb-4">
-            <a onclick="setSearch()" class="active:scale-90 cursor-pointer text-white hover:text-green-500">Search</a>
+          <li onclick="setSearch()" class="mb-4">
+            <a class="active:scale-90 cursor-pointer text-white hover:text-green-500">Search</a>
           </li>
           {% if current_user.is_admin() %}
           <li class="mb-4">
