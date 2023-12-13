@@ -142,3 +142,10 @@ progressBar.addEventListener('input', function() {
 
 // Initialize home content
 setHome();
+
+document.addEventListener('keyup', event => {
+    if (event.code === 'Space') {
+        isPlaying = !isPlaying;
+        isPlaying ? play() : pause();
+    }
+})
