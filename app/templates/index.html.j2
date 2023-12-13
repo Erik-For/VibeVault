@@ -23,14 +23,14 @@ body {
       <nav>
         <ul class="list-none">
           <li onclick="setHome()" class="mb-4">
-            <a class="active:scale-90 cursor-pointer text-white hover:text-green-500">Home</a>
+            <a class="active:scale-90 cursor-pointer text-white hover:text-slate-200">Home</a>
           </li>
           <li onclick="setSearch()" class="mb-4">
-            <a class="active:scale-90 cursor-pointer text-white hover:text-green-500">Search</a>
+            <a class="active:scale-90 cursor-pointer text-white hover:text-slate-200">Search</a>
           </li>
           {% if current_user.is_admin() %}
           <li class="mb-4">
-            <a href="{{ url_for('admin') }}" class="text-white hover:text-green-500">Admin</a>
+            <a href="{{ url_for('admin') }}" class="text-white hover:text-slate-200">Admin</a>
           </li>
           {% endif %}
           <!-- Additional navigation items -->
