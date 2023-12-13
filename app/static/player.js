@@ -6,6 +6,8 @@ const playBtn = document.getElementById('play-button');
 const prevBtn = document.getElementById('prev-button');
 const nextBtn = document.getElementById('next-button');
 const volumeControl = document.getElementById('volume');
+const currentTimeElement = document.getElementById('current-time');
+const totalTimeElement = document.getElementById('total-time');
 
 var queue = []
 
@@ -126,11 +128,19 @@ function setArtist(event, id) {
     });
 }
 
+audioPlayer.addEventListener('durationchange', (e) => {
+    const duration = audioPlayer.duration;
+    totalTimeElement.textContent = formatTime(duration);
+});
+
 audioPlayer.ontimeupdate = function() {
     value = (audioPlayer.currentTime / audioPlayer.duration) * 100
     if (isNaN(value)) {
         return;
     }
+    const currentTime = audioPlayer.currentTime;
+    currentTimeElement.textContent = formatTime(currentTime);
+
     progressBar.value = value;
 };
 
@@ -139,6 +149,12 @@ progressBar.addEventListener('input', function() {
     const time = (progressBar.value * audioPlayer.duration) / 100;
     audioPlayer.currentTime = time;
 });
+
+function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60);
+    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+}
 
 // Initialize home content
 setHome();
