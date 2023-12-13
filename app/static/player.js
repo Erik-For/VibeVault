@@ -9,6 +9,7 @@ const volumeControl = document.getElementById('volume');
 const currentTimeElement = document.getElementById('current-time');
 const totalTimeElement = document.getElementById('total-time');
 
+
 var queue = []
 
 function updatePlayButton(isPlaying) {
@@ -161,6 +162,12 @@ setHome();
 
 document.addEventListener('keyup', event => {
     if (event.code === 'Space') {
+        const searchInput = document.querySelector("#searchInput");
+        if (searchInput) {
+            if(searchInput === document.activeElement) {
+                return;
+            }
+        }
         isPlaying = !isPlaying;
         isPlaying ? play() : pause();
     }
