@@ -1,4 +1,4 @@
-<div class="overflow-scroll">
+
 <div class="pb-3">
 {% for artist in artists %}
     <div onclick="setArtist(event,{{ artist.id }})" class="mb-1 flex items-center hover:bg-gray-700 bg-gray-900 p-5 rounded cursor-pointer">
@@ -24,5 +24,3 @@
     </div>
 {% endfor %}
 <h2 class="text-xl font-bold mb-4">{{ message }}</h2>
-
-</div>
