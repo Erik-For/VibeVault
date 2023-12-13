@@ -81,7 +81,7 @@ def forgot_password():
             msg = Message(
                 subject="Invite to VibeVault",
                 recipients=[email],
-                body=f"Click this link to verify your email: https://vibevault.se/reset_password/{reset_password.email_verification_token}",
+                body=f"Reset your password: https://vibevault.se/reset_password/{reset_password.email_verification_token}",
             )
             mail.send(msg)
         flash("Sent Password    -Recovery Email!")
@@ -324,7 +324,7 @@ def invite_user():
     msg = Message(
         subject="Invite to VibeVault",
         recipients=[email],
-        body=f"Click this link to verify your email: https://vibevault.se/invite/{invite.email_verification_token}",
+        body=f"Here is your invite to VibeVault: https://vibevault.se/invite/{invite.email_verification_token}",
     )
     mail.send(msg)
     return redirect(url_for("admin_users"))
