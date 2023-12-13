@@ -14,7 +14,7 @@
     <!-- Artist Top Tracks -->
     <div class="mb-8">
         <h2 class="text-xl font-bold mb-4">Top Tracks</h2>
-        <div class="space-y-2">
+        <div class="space-y-2 overflow-y-scroll">
             <!-- List each track; repeat for each track available for the artist -->
             {% for track in artist.contents %}
             <div onclick="setSong({{track.id}});" class="mb-2 flex items-center bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer">
