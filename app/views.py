@@ -165,7 +165,7 @@ def contet_info(id):
     return jsonify({"title": song.title, "artist": song.artist.name})
 
 #
-# Admin related endpoints
+# admin related endpoints
 #
 
 def allowed_picture(filename):
@@ -385,3 +385,87 @@ def reset_password(token):
             flash("Created an account, Enjoy!")
             return redirect(url_for("login_page"))
     return ""
+
+@app.route("/admin/featured")
+@login_required
+def manage_featured():
+    if not current_user.is_admin():
+        flash('You do not have permission to view this page.', 'danger')
+        return redirect(url_for('index'))
+
+    featured_artists = db.session.execute(db.select(FeaturedArtists)).scalars()
+    featured_content = db.session.execute(db.select(FeaturedContent)).scalars()
+    
+    return render_template("admin_featured.html.j2",
+                           featured_artists=featured_artists,
+                           featured_content=featured_content)
+
+@app.route("/admin/featured/artists/add", methods=["POST"])
+@login_required
+def add_featured_artist():
+    if not current_user.is_admin():
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('index'))
+
+    # Add logic to add an artist to the featured list
+    artist_id = request.form.get('artist_id')
+    artist = Artist.query.get(artist_id)
+    if artist:
+        feature = FeaturedArtists(artist_id=artist.id)
+        db.session.add(feature)
+        db.session.commit()
+        flash('Artist added to featured list.', 'success')
+    else:
+        flash('Artist not found.', 'danger')
+
+    return redirect(url_for('manage_featured'))
+
+@app.route("/admin/featured/artists/remove/<int:artist_id>", methods=["POST"])
+@login_required
+def remove_featured_artist(artist_id):
+    if not current_user.is_admin():
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('index'))
+
+    feature = FeaturedArtists.query.filter_by(artist_id=artist_id).first()
+    if feature:
+        db.session.delete(feature)
+        db.session.commit()
+        flash('Artist removed from featured list.', 'success')
+
+    return redirect(url_for('manage_featured'))
+
+@app.route("/admin/featured/content/add", methods=["POST"])
+@login_required
+def add_featured_content():
+    if not current_user.is_admin():
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('index'))
+
+    # Add logic to add content to the featured list
+    content_id = request.form.get('content_id')
+    content = Content.query.get(content_id)
+    if content:
+        feature = FeaturedContent(content_id=content.id)
+        db.session.add(feature)
+        db.session.commit()
+        flash('Content added to featured list.', 'success')
+    else:
+        flash('Content not found.', 'danger')
+
+    return redirect(url_for('manage_featured'))
+
+@app.route("/admin/featured/content/remove/<int:content_id>", methods=["POST"])
+@login_required
+def remove_featured_content(content_id):
+    if not current_user.is_admin():
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('index'))
+
+    feature = FeaturedContent.query.filter_by(content_id=content_id).first()
+    if feature:
+        db.session.delete(feature)
+        db.session.commit()
+        flash('Content removed from featured list.', 'success')
+
+    return redirect(url_for('manage_featured'))

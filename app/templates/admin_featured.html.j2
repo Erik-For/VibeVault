@@ -1,0 +1,120 @@
+{% extends "base.html.j2" %}
+
+{% block title %}
+Admin - Manage Featured Content
+{% endblock %}
+
+{% block body %}
+
+<div class="container mx-auto mt-4 p-4 bg-white shadow-lg">
+
+    <!-- Navigation back to admin panel -->
+    <div class="flex justify-between items-center mb-6">
+        <a href="{{ url_for('admin') }}" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 mb-4">Back</a>
+        <h1 class="text-xl font-bold">Manage Featured Content</h1>
+        <h1> </h1> <!-- Placeholder for alignment -->
+    </div>
+
+<!-- Add Featured Content Modal -->
+    <div id="add-featured-content-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Add New Featured Content</h3>
+                <form action="{{ url_for('add_featured_content') }}" method="post">
+                    <div class="mt-4">
+                        <label for="content_id" class="block text-sm font-medium text-gray-700">Content ID</label>
+                        <input type="text" id="content_id" name="content_id" class="px-4 py-2 w-full border rounded" required>
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">Add Content</button>
+                    </div>
+                </form>
+                <button onclick="openNewContentFeature();" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50" data-modal-toggle="add-featured-content-modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+<!-- Add Featured Artist Modal -->
+    <div id="add-featured-artist-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Add New Featured Artist</h3>
+                <form action="{{ url_for('add_featured_artist') }}" method="post">
+                    <div class="mt-4">
+                        <label for="artist_id" class="block text-sm font-medium text-gray-700">Artist ID</label>
+                        <input type="text" id="artist_id" name="artist_id" class="px-4 py-2 w-full border rounded" required>
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">Add Artist</button>
+                    </div>
+                </form>
+                <button onclick="openNewArtistFeature();" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50" data-modal-toggle="add-featured-artist-modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Featured Artists Section -->
+    <div class="mb-8">
+        <h2 class="text-lg font-semibold mb-4">Featured Artists</h2>
+        <div class="space-y-2">
+            <!-- Placeholder loop for featured artists -->
+            {% for featured_a in featured_artists %}
+                <div class="flex justify-between items-center p-2 border-b">
+                    <span onclick="window.location.href='{{ url_for('admin_manage_artist_songs', artist_id=featured_a.artist.id) }}'">{{ featured_a.artist.name }}</span>
+                    <div class="flex space-x-2">
+                        <button onclick="removeArtistFeature({{ featured_a.artist.id }})" class="cursor-pointer px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">Remove</button>
+                    </div>
+                </div>
+            {% endfor %}
+            <!-- Placeholder for 'Add Featured Artist' button -->
+            <a onclick="openNewArtistFeature();" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mt-2 inline-block">Add Featured Artist</a>
+        </div>
+    </div>
+
+    <!-- Featured Content Section -->
+    <div>
+        <h2 class="text-lg font-semibold mb-4">Featured Content</h2>
+        <div class="space-y-2">
+            <!-- Placeholder loop for featured content -->
+            {% for featured_c in featured_content %}
+                <div class="flex justify-between items-center p-2 border-b">
+                    <span onclick="window.location.href='{{ url_for('admin_manage_artist_songs', artist_id=featured_c.content.artist.id) }}'">{{ featured_c.content.title }}</span>
+                    <div class="flex space-x-2">
+                        <a href="#removeContentLink" class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">Remove</a>
+                    </div>
+                </div>
+            {% endfor %}
+            <!-- Placeholder for 'Add Featured Content' button -->
+            <a onclick="openNewContentFeature();" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mt-2 inline-block">Add Featured Content</a>
+        </div>
+    </div>
+    
+</div>
+
+<script>
+
+function openNewArtistFeature(){
+    target = document.querySelector("#add-featured-artist-modal");
+    target.classList.toggle('hidden');
+}
+
+function openNewContentFeature(){
+    target = document.querySelector("#add-featured-content-modal");
+    target.classList.toggle('hidden');
+}
+
+function removeArtistFeature(id) {
+    fetch("/admin/featured/artists/remove/" + id, {
+        method: 'POST'
+    })
+    location.reload();
+}
+
+function removeContenteature(id) {
+    fetch("/admin/featured/content/remove/" + id, {
+        method: 'POST'
+    })
+    location.reload();
+}
+</script>
+{% endblock %}
