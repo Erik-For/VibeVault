@@ -6,6 +6,11 @@
 VibeVault - Home
 {% endblock title %}
 {% block body %}
+<style>
+body{
+  overflow: hidden;
+}
+</style>
 <div class="bg-gray-800 flex flex-row min-h-screen">
     <div class="w-60 bg-gray-900 p-5 hidden lg:block">
       <div class="mb-10">
@@ -34,7 +39,7 @@ VibeVault - Home
     </div>
 
     <!-- Main Content -->
-    <div id="content" class="flex-1">
+    <div id="content" class="flex-1 min-h-0 overflow-auto">
 
     </div>
   </div>
