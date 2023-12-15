@@ -16,11 +16,12 @@ var playingId = null;
 var selectedSong = null;
 
 function addToQueue(id) {
-    if (queue.length === 1) {
+    if (queue.length === 0) {
         setSong(id);
         songHistory.push(id); // add to history when a song starts playing
+    } else {
+        queue.push(id);
     }
-    queue.push(id);
 }
 
 function nextSong() {
