@@ -389,7 +389,7 @@ def reset_password(token):
 @app.route("/admin/featured")
 @login_required
 def manage_featured():
-    if not current_user.is_admin():
+    if not current_user.is_super_user():
         flash('You do not have permission to view this page.', 'danger')
         return redirect(url_for('index'))
 
@@ -403,7 +403,7 @@ def manage_featured():
 @app.route("/admin/featured/artists/add", methods=["POST"])
 @login_required
 def add_featured_artist():
-    if not current_user.is_admin():
+    if not current_user.is_super_user():
         flash('You do not have permission to perform this action.', 'danger')
         return redirect(url_for('index'))
 
@@ -423,7 +423,7 @@ def add_featured_artist():
 @app.route("/admin/featured/artists/remove/<int:artist_id>", methods=["POST"])
 @login_required
 def remove_featured_artist(artist_id):
-    if not current_user.is_admin():
+    if not current_user.is_super_user():
         flash('You do not have permission to perform this action.', 'danger')
         return redirect(url_for('index'))
 
@@ -438,7 +438,7 @@ def remove_featured_artist(artist_id):
 @app.route("/admin/featured/content/add", methods=["POST"])
 @login_required
 def add_featured_content():
-    if not current_user.is_admin():
+    if not current_user.is_super_user():
         flash('You do not have permission to perform this action.', 'danger')
         return redirect(url_for('index'))
 
@@ -458,7 +458,7 @@ def add_featured_content():
 @app.route("/admin/featured/content/remove/<int:content_id>", methods=["POST"])
 @login_required
 def remove_featured_content(content_id):
-    if not current_user.is_admin():
+    if not current_user.is_super_user():
         flash('You do not have permission to perform this action.', 'danger')
         return redirect(url_for('index'))
 
