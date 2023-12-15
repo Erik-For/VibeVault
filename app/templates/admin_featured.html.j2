@@ -80,7 +80,7 @@ Admin - Manage Featured Content
                 <div class="flex justify-between items-center p-2 border-b">
                     <span onclick="window.location.href='{{ url_for('admin_manage_artist_songs', artist_id=featured_c.content.artist.id) }}'">{{ featured_c.content.title }}</span>
                     <div class="flex space-x-2">
-                        <a href="#removeContentLink" class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">Remove</a>
+                        <button onclick="removeContentFeature( {{ featured_c.content.id }} )" class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">Remove</button>
                     </div>
                 </div>
             {% endfor %}
@@ -112,7 +112,7 @@ function removeArtistFeature(id) {
 
 }
 
-function removeContenteature(id) {
+function removeContentFeature(id) {
     fetch("/admin/featured/content/remove/" + id, {
         method: 'POST'
     }).then(() => {
