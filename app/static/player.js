@@ -69,7 +69,9 @@ function songContextMenu(e, id) {
   });
   
   document.getElementById('addToQueue').addEventListener('click', function (e) {
+    e.preventDefault();
     addToQueue(selectedSong);
+    contextMenu.classList.add('hidden');
   });
   
 //   document.getElementById('addToPlaylist').addEventListener('click', function () {
