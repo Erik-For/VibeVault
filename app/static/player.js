@@ -70,9 +70,9 @@ function songContextMenu(e, id) {
     queue.push(selectedSong);
   });
   
-  document.getElementById('addToPlaylist').addEventListener('click', function () {
-    // Add the song to the playlist
-  });
+//   document.getElementById('addToPlaylist').addEventListener('click', function () {
+//     // Add the song to the playlist
+//   });
 
 // Attach click event handlers to buttons
 playBtn.addEventListener('click', function() {
