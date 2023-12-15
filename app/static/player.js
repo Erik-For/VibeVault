@@ -22,14 +22,12 @@ function addToQueue(id) {
 }
 
 function nextSong() {
-    console.log("hej");
     if (queue.length > 0) {
-        console.log("Då");
         songHistory.push(queue[0]); // add to history before going to next song
-        queue.shift();
         if (queue.length > 0) {
             setSong(queue[0]);
         }
+        queue.shift();
     }
 }
 
@@ -40,8 +38,6 @@ function prevSong() {
     }
 }
 
-prevBtn.addEventListener('click', nextSong.apply(this));
-nextBtn.addEventListener('click', prevSong.apply(this));
 
 function play() {
     audioPlayer.play();
