@@ -12,6 +12,8 @@ const totalTimeElement = document.getElementById('total-time');
 
 var queue = [];
 var songHistory = []; // stack to keep track of played songs
+var playingId = null;
+var selectedSong = null;
 
 function addToQueue(id) {
     if (queue.length === 1) {
@@ -23,18 +25,18 @@ function addToQueue(id) {
 
 function nextSong() {
     if (queue.length > 0) {
-        if (queue.length > 0) {
-            setSong(queue[0]);
-        }
-        songHistory.push(queue[0]); // add to history before going to next song
+        songHistory.push(playingId); // add to history before going to next song
+        setSong(queue[0]);
         queue.shift();
     }
 }
 
 function prevSong() {
-    if (songHistory.length > 1) { // check if there's a song to go back to
+    if (songHistory.length > 0) { // check if there's a song to go back to
+        song = songHistory[songHistory.length - 1];
+        setSong(song); // play the last song in history
         songHistory.pop(); // remove current song from history
-        setSong(songHistory[songHistory.length - 1]); // play the last song in history
+        queue.unshift(song)
     }
 }
 
@@ -102,6 +104,7 @@ audioPlayer.addEventListener('ended', function() {
 // Load song
 function setSong(id) {
     isPlaying = true;
+    playingId = id;
     image = document.getElementById("playing-img");
     playing_title = document.getElementById("playing-title");
     artist = document.getElementById("playing-artist");
