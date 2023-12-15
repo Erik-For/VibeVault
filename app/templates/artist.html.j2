@@ -17,7 +17,7 @@
         <div class="space-y-2">
             <!-- List each track; repeat for each track available for the artist -->
             {% for track in artist.contents %}
-            <div onclick="setSong({{track.id}});" oncontextmenu="songContextMenu(event, {{track.id}});" class="mb-2 bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer">
+            <div onclick="clickSong({{track.id}});" oncontextmenu="songContextMenu(event, {{track.id}});" class="mb-2 bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer">
                 <!-- Example of a single song item -->
                 <div class="flex items-center">
                     <img class="rounded w-12 h-12 mr-3" src="{{ url_for('contet_cover', id=track.id) }}" alt="Song Cover">

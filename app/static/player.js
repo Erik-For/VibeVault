@@ -105,6 +105,12 @@ audioPlayer.addEventListener('ended', function() {
     next();
 });
 
+function clickSong(id){
+    setSong(id);
+    queue = [];
+    songHistory = [];
+}
+
 // Load song
 function setSong(id) {
     isPlaying = true;

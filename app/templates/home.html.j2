@@ -15,7 +15,7 @@
         <h2 class="text-xl font-bold mb-4">Featured Content</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {% for feature in song_features %}
-                <div onclick="setSong({{ feature.content.id }})" oncontextmenu="songContextMenu(event, {{feature.content.id}});" style="background-color: #283240;" class="bg-gray-900 rounded-lg p-4 shadow-lg h-auto max-h-72 overflow-hidden">
+                <div onclick="clickSong({{ feature.content.id }})" oncontextmenu="songContextMenu(event, {{feature.content.id}});" style="background-color: #283240;" class="bg-gray-900 rounded-lg p-4 shadow-lg h-auto max-h-72 overflow-hidden">
                     <img src="{{ url_for('contet_cover', id=feature.content.id) }}" class="w-full h-40 object-cover rounded mb-2">
                     <h3 class="text-sm font-semibold truncate">{{ feature.content.title }}</h3>
                     <a onclick="setArtist(event, {{ feature.content.artist.id }})" class="hover:underline text-xs truncate">{{ feature.content.artist.name }}</a>
