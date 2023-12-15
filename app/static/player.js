@@ -21,7 +21,7 @@ function addToQueue(id) {
     queue.push(id);
 }
 
-function next() {
+function nextSong() {
     if (queue.length > 0) {
         songHistory.push(queue[0]); // add to history before going to next song
         queue.shift();
@@ -31,7 +31,7 @@ function next() {
     }
 }
 
-function prev() {
+function prevSong() {
     if (songHistory.length > 1) { // check if there's a song to go back to
         songHistory.pop(); // remove current song from history
         setSong(songHistory[songHistory.length - 1]); // play the last song in history
@@ -79,8 +79,8 @@ playBtn.addEventListener('click', function() {
     isPlaying ? play() : pause();
 });
 
-prevBtn.addEventListener('click', next);
-nextBtn.addEventListener('click', prev);
+prevBtn.addEventListener('click', nextSong);
+nextBtn.addEventListener('click', prevSong);
 
 function loadAndPlay(direction) {
     // Replace these with the actual logic to get the prev/next song URL
