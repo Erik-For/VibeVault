@@ -14,11 +14,11 @@ var queue = [];
 var songHistory = []; // stack to keep track of played songs
 
 function addToQueue(id) {
-    queue.push(id);
     if (queue.length === 1) {
         setSong(id);
         songHistory.push(id); // add to history when a song starts playing
     }
+    queue.push(id);
 }
 
 function next() {
