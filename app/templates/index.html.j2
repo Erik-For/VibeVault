@@ -55,7 +55,7 @@ body {
             <div class="max-w-screen-xl mx-auto px-4 py-2">
                 <div class="flex items-center justify-between">
                     <!-- Left section: Song Information -->
-                    <div class="w-1/4flex items-center">
+                    <div class="flex items-center">
                         <img id="playing-img" class="w-12 h-12 mr-3" src="{{ url_for('static', filename='default/cover.jpg') }}">
                         <div>
                             <h3 id="playing-title" class="break-all text-lg font-semibold">Play a song!</h3>
@@ -82,7 +82,7 @@ body {
                         </div>
                     </div>
                     <!-- Right section: Volume & Other Controls -->
-                    <div class="w-1/4 flex flex-item flex-item-hide items-center">
+                    <div class="flex flex-item flex-item-hide items-center">
                         <button class="mx-2">
                             <img src="{{ url_for('static', filename='svg/volume.svg') }}" class="w-6 h-6">
                         </button>
