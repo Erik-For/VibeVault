@@ -10,21 +10,42 @@ const currentTimeElement = document.getElementById('current-time');
 const totalTimeElement = document.getElementById('total-time');
 
 
-
+var playedSongs = []
 var queue = []
+// Add a queue to queue songs and supporting functions
+function addToQueue(id) {
+    queue.push(id);
+    if (queue.length === 1) {
+        setSong(id);
+    }
+}
 
-function updatePlayButton(isPlaying) {
-    playBtn.firstElementChild.src = isPlaying ? "/static/svg/playing.svg" : "/static/svg/paused.svg";
+function next() {
+    if (queue.length > 0) {
+        queue.shift();
+        if (queue.length > 0) {
+            setSong(queue[0]);
+        }
+    }
+}
+
+function prev() {
+    if (queue.length > 0) {
+        queue.pop();
+        if (queue.length > 0) {
+            setSong(queue[queue.length - 1]);
+        }
+    }
 }
 
 function play() {
     audioPlayer.play();
-    updatePlayButton(true);
+    playBtn.firstElementChild.src = "/static/svg/playing.svg";
 }
 
 function pause() {
     audioPlayer.pause();
-    updatePlayButton(false);
+    playBtn.firstElementChild.src = "/static/svg/paused.svg";
 }
 
 // Attach click event handlers to buttons
@@ -33,8 +54,8 @@ playBtn.addEventListener('click', function() {
     isPlaying ? play() : pause();
 });
 
-prevBtn.addEventListener('click', loadAndPlay.bind(null, 'prev'));
-nextBtn.addEventListener('click', loadAndPlay.bind(null, 'next'));
+prevBtn.addEventListener('click', next);
+nextBtn.addEventListener('click', prev);
 
 function loadAndPlay(direction) {
     // Replace these with the actual logic to get the prev/next song URL
@@ -49,13 +70,12 @@ volumeControl.addEventListener('input', function(event) {
     audioPlayer.volume = event.target.value / 100;
 });
 
-// Reset play button to play state when the song ends
+// Play next song when song ends
 audioPlayer.addEventListener('ended', function() {
-    updatePlayButton(false);
-    // Optionally, play the next song by invoking loadAndPlay:
-    // loadAndPlay('next');
+    next();
 });
 
+// Load song
 function setSong(id) {
     isPlaying = true;
     image = document.getElementById("playing-img");
@@ -76,7 +96,7 @@ function setSong(id) {
     play();
 }
 
-function configureSearchInput(inputElement) {
+function enableSearchFieldEventListener(inputElement) {
     let timeout = null;
     inputElement.addEventListener("input", function(event) {
         clearTimeout(timeout);
@@ -115,20 +135,17 @@ function setSearch() {
     updateContent("/page/search", () => {
         const searchInput = document.querySelector("#searchInput");
         if (searchInput) {
-            configureSearchInput(searchInput);
+            enableSearchFieldEventListener(searchInput);
         }
     });
 }
 
 function setArtist(event, id) {
     event.stopPropagation();
-    updateContent(`/page/artist/${id}`, () => {
-        const searchInput = document.querySelector("#searchInput");
-        if (searchInput) {
-            configureSearchInput(searchInput);
-        }
-    });
+    updateContent(`/page/artist/${id}`);
 }
+
+// Progress bar related methods
 
 audioPlayer.addEventListener('durationchange', (e) => {
     const duration = audioPlayer.duration;
@@ -146,11 +163,11 @@ audioPlayer.ontimeupdate = function() {
     progressBar.value = value;
 };
 
-// Seek in the audio when the progress bar is clicked or dragged
 progressBar.addEventListener('input', function() {
     const time = (progressBar.value * audioPlayer.duration) / 100;
     audioPlayer.currentTime = time;
 });
+
 
 function formatTime(seconds) {
     const min = Math.floor(seconds / 60);
@@ -158,9 +175,8 @@ function formatTime(seconds) {
     return `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
 
-// Initialize home content
-setHome();
 
+// Prevent music from pausing when typing text and pressing space at the same time
 document.addEventListener('keyup', event => {
     if (event.code === 'Space') {
         const searchInput = document.querySelector("#searchInput");
@@ -173,3 +189,7 @@ document.addEventListener('keyup', event => {
         isPlaying ? play() : pause();
     }
 })
+
+
+// Default to the home page
+setHome();
