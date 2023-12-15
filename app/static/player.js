@@ -12,6 +12,7 @@ const totalTimeElement = document.getElementById('total-time');
 
 var playedSongs = []
 var queue = []
+var selectedSong = null;
 // Add a queue to queue songs and supporting functions
 function addToQueue(id) {
     queue.push(id);
@@ -47,6 +48,31 @@ function pause() {
     audioPlayer.pause();
     playBtn.firstElementChild.src = "/static/svg/paused.svg";
 }
+
+
+function songContextMenu(e, id) {
+    e.preventDefault();
+    selectedSong = id;
+    var contextMenu = document.getElementById('contextMenu');
+    contextMenu.style.top = `${e.pageY}px`;
+    contextMenu.style.left = `${e.pageX}px`;
+    contextMenu.classList.remove('hidden');
+  }
+  
+  window.addEventListener('click', function (e) {
+    var contextMenu = document.getElementById('contextMenu');
+    if (e.target !== contextMenu) {
+      contextMenu.classList.add('hidden');
+    }
+  });
+  
+  document.getElementById('addToQueue').addEventListener('click', function (e) {
+    queue.push(selectedSong);
+  });
+  
+  document.getElementById('addToPlaylist').addEventListener('click', function () {
+    // Add the song to the playlist
+  });
 
 // Attach click event handlers to buttons
 playBtn.addEventListener('click', function() {
