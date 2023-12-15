@@ -1,6 +1,6 @@
 import os, secrets
 from flask import Flask, request
-import flask_login import current_user
+from flask_login import current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail
