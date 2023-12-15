@@ -22,7 +22,9 @@ function addToQueue(id) {
 }
 
 function nextSong() {
+    console.log("hej");
     if (queue.length > 0) {
+        console.log("Då");
         songHistory.push(queue[0]); // add to history before going to next song
         queue.shift();
         if (queue.length > 0) {
