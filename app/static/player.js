@@ -40,6 +40,9 @@ function prevSong() {
     }
 }
 
+prevBtn.addEventListener('click', nextSong.apply(this));
+nextBtn.addEventListener('click', prevSong.apply(this));
+
 function play() {
     audioPlayer.play();
     playBtn.firstElementChild.src = "/static/svg/playing.svg";
@@ -81,8 +84,6 @@ playBtn.addEventListener('click', function() {
     isPlaying ? play() : pause();
 });
 
-prevBtn.addEventListener('click', nextSong);
-nextBtn.addEventListener('click', prevSong);
 
 function loadAndPlay(direction) {
     // Replace these with the actual logic to get the prev/next song URL
