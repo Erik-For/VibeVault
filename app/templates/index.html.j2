@@ -75,14 +75,14 @@ body {
                                 <img src="{{ url_for('static', filename='svg/skip.svg')}}" class="w-10 h-10 active:scale-90">
                             </button>
                         </div>
-                        <div id="progress-container" class="w-1/4 flex px-16 relative cursor-pointer">
+                        <div id="progress-container" class="w-flex px-16 relative flex-1 cursor-pointer">
                             <span class="pr-2" id="current-time">0:00</span>
                             <input type="range" placeholder="0" id="progress-bar" class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer" min="0" value="0">
                             <span class="pl-2" id="total-time">0:00</span>
                         </div>
                     </div>
                     <!-- Right section: Volume & Other Controls -->
-                    <div class="flex flex-item flex-item-hide items-center">
+                    <div class="w-1/4 flex flex-item flex-item-hide items-center">
                         <button class="mx-2">
                             <img src="{{ url_for('static', filename='svg/volume.svg') }}" class="w-6 h-6">
                         </button>
