@@ -55,6 +55,9 @@ handler = logging.StreamHandler()
 handler.setFormatter(formatter)
 app.logger.addHandler(handler)
 
+app.logger.setLevel(logging.INFO)
+
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
