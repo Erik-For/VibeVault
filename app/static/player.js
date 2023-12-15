@@ -10,19 +10,20 @@ const currentTimeElement = document.getElementById('current-time');
 const totalTimeElement = document.getElementById('total-time');
 
 
-var playedSongs = []
-var queue = []
-var selectedSong = null;
-// Add a queue to queue songs and supporting functions
+var queue = [];
+var songHistory = []; // stack to keep track of played songs
+
 function addToQueue(id) {
     queue.push(id);
     if (queue.length === 1) {
         setSong(id);
+        songHistory.push(id); // add to history when a song starts playing
     }
 }
 
 function next() {
     if (queue.length > 0) {
+        songHistory.push(queue[0]); // add to history before going to next song
         queue.shift();
         if (queue.length > 0) {
             setSong(queue[0]);
@@ -31,11 +32,9 @@ function next() {
 }
 
 function prev() {
-    if (queue.length > 0) {
-        queue.pop();
-        if (queue.length > 0) {
-            setSong(queue[queue.length - 1]);
-        }
+    if (songHistory.length > 1) { // check if there's a song to go back to
+        songHistory.pop(); // remove current song from history
+        setSong(songHistory[songHistory.length - 1]); // play the last song in history
     }
 }
 
@@ -67,7 +66,7 @@ function songContextMenu(e, id) {
   });
   
   document.getElementById('addToQueue').addEventListener('click', function (e) {
-    queue.push(selectedSong);
+    addToQueue(selectedSong);
   });
   
 //   document.getElementById('addToPlaylist').addEventListener('click', function () {

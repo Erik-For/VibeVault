@@ -18,7 +18,7 @@
             <img class="rounded w-12 h-12 mr-3" src="{{ url_for('contet_cover', id=content_row.id) }}" alt="Song Cover">
             <div class="flex-grow">
                 <h4 class="text-white text-lg">{{ content_row.title }}</h4>
-                <button onclick="setArtist(event, {{ content_row.artist.id }})" class="hover:underline text-gray-400">{{ content_row.artist.name }}</button>
+                <button onclick="setArtist(event, {{ content_row.artist.id }})" oncontextmenu="songContextMenu(event, {{content_row.id}});" class="hover:underline text-gray-400">{{ content_row.artist.name }}</button>
             </div>
         </div>
     </div>
