@@ -55,7 +55,7 @@ body {
             <div class="max-w-screen-xl mx-auto px-4 py-2">
                 <div class="flex items-center justify-between">
                   <!-- Left section: Song Information -->
-                  <div class="flex items-center shrink-0">
+                  <div style="flex-grow: 1" class="flex items-center shrink-0">
                     <img id="playing-img" class="w-12 h-12 mr-3" src="{{ url_for('static', filename='default/cover.jpg') }}">
                     <div>
                       <h3 id="playing-title" class="break-all text-lg font-semibold">Play a song!</h3>
@@ -63,7 +63,7 @@ body {
                     </div>
                   </div>
                   <!-- Middle section: Playback Controls -->
-                  <div class="flex-grow flex flex-col justify-center">
+                  <div style="flex-grow: 3" class="flex flex-col justify-center">
                     <div class="flex items-center justify-center">
                       <button onclick="prevSong();" id="prev-button" class="mx-2">
                         <img src="{{ url_for('static', filename='svg/prev.svg')}}" class="w-10 h-10 active:scale-90">
@@ -82,7 +82,7 @@ body {
                     </div>
                   </div>
                   <!-- Right section: Volume & Other Controls -->
-                  <div class="flex flex-item flex-item-hide items-center shrink-0">
+                  <div style="flex-grow: 1" class="flex flex-item flex-item-hide items-center shrink-0">
                     <button class="mx-2">
                       <img src="{{ url_for('static', filename='svg/volume.svg') }}" class="w-6 h-6">
                     </button>
