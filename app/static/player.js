@@ -23,10 +23,10 @@ function addToQueue(id) {
 
 function nextSong() {
     if (queue.length > 0) {
-        songHistory.push(queue[0]); // add to history before going to next song
         if (queue.length > 0) {
             setSong(queue[0]);
         }
+        songHistory.push(queue[0]); // add to history before going to next song
         queue.shift();
     }
 }
