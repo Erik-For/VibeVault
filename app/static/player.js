@@ -1,4 +1,5 @@
 let isPlaying = false;
+isInitlized = false;
 const audioPlayer = document.getElementById('audioPlayer');
 const progressBar = document.getElementById('progress-bar');
 const audioSource = document.getElementById('audioSource');
@@ -16,7 +17,7 @@ var playingId = null;
 var selectedSong = null;
 
 function addToQueue(id) {
-    if (queue.length === 0 && isPlaying === false) {
+    if (queue.length === 0 && isInitlized === false) {
         setSong(id);
     } else {
         queue.push(id);
@@ -113,6 +114,7 @@ function clickSong(id){
 
 // Load song
 function setSong(id) {
+    isInitlized = true;
     isPlaying = true;
     playingId = id;
     image = document.getElementById("playing-img");
