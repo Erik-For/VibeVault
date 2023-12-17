@@ -1,14 +1,33 @@
 let isPlaying = false;
 isInitlized = false;
 const audioPlayer = document.getElementById('audioPlayer');
-const progressBar = document.getElementById('progress-bar');
-const audioSource = document.getElementById('audioSource');
-const playBtn = document.getElementById('play-button');
-const prevBtn = document.getElementById('prev-button');
-const nextBtn = document.getElementById('next-button');
 const volumeControl = document.getElementById('volume');
 const currentTimeElement = document.getElementById('current-time');
 const totalTimeElement = document.getElementById('total-time');
+const progressBar = document.getElementById('progress-bar');
+const audioSource = document.getElementById('audioSource');
+var playing_title;
+var artist;
+var playBtn;
+var prevBtn;
+var nextBtn;
+var songCover;
+if(window.innerWidth < 768){
+    console.log("Mobile mode");
+    songCover = document.getElementById("playing-img-mobile");
+    playBtn = document.getElementById('play-btn-mobile');
+    prevBtn = document.getElementById('prev-btn-mobile');
+    nextBtn = document.getElementById('next-btn-mobile');
+    playing_title = document.getElementById("playing-title-mobile");
+    artist = document.getElementById("playing-artist-mobile");
+} else {
+    playing_title = document.getElementById("playing-title");
+    artist = document.getElementById("playing-artist");
+    songCover = document.getElementById("playing-img");
+    playBtn = document.getElementById('play-button');
+    prevBtn = document.getElementById('prev-button');
+    nextBtn = document.getElementById('next-button');
+}
 
 
 var queue = [];
@@ -117,10 +136,7 @@ function setSong(id) {
     isInitlized = true;
     isPlaying = true;
     playingId = id;
-    image = document.getElementById("playing-img");
-    playing_title = document.getElementById("playing-title");
-    artist = document.getElementById("playing-artist");
-    image.src = "/content/cover/" + id
+    songCover.src = "/content/cover/" + id
 
     fetch("/content/info/" + id)
         .then(response => response.json())

@@ -16,7 +16,7 @@
   </style>
 
   <div class="bg-gray-800 flex flex-row min-h-screen">
-    <div class="w-60 bg-gray-900 p-5 hidden lg:block">
+    <div class="w-60 bg-gray-900 p-5 hidden md:block">
       <div class="mb-10">
         <!-- Logo -->
         <div class="flex flex-row justify-center">
@@ -52,7 +52,7 @@
     <audio id="audioPlayer" preload="none">
       <source id="audioSource" src="" type="audio/mpeg">
     </audio>
-    <div class="lg:block flex flex-row flex bg-gray-900 justify-between">
+    <div class="md:block flex flex-row flex bg-gray-900 justify-between">
       <div class="fixed inset-x-0 bottom-0 bg-gray-900 text-white">
         <div class="max-w-screen-xl mx-auto px-4 py-2">
           <div class="flex items-center justify-between">
@@ -60,7 +60,7 @@
             <div class="flex items-center">
               <img id="playing-img" class="w-12 h-12 mr-3" src="{{ url_for('static', filename='default/cover.jpg') }}">
               <div>
-                <h3 id="playing-title" class="break-all text-lg font-semibold truncate">Play a song!</h3>
+                <h3 id="playing-title" class="break-all text-md font-semibold truncate">Play a song!</h3>
                 <p id="playing-artist" class="truncate">VibeVault</p>
               </div>
             </div>
@@ -79,7 +79,7 @@
               </div>
               <div id="progress-container" class="flex px-16 relative flex-1 cursor-pointer">
                 <span class="pr-2" id="current-time">0:00</span>
-                <input type="range" placeholder="0" id="progress-bar" class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer" min="0" value="0">
+                <input type="range" placeholder="0" id="progress-bar" class="w-full h-2 bg-gray-800 rounded-mg appearance-none cursor-pointer" min="0" value="0">
                 <span class="pl-2" id="total-time">0:00</span>
               </div>
             </div>
@@ -99,7 +99,7 @@
   </div>
 
   <!-- Mobile Navigation -->
-  <div class="lg:hidden fixed inset-x-0 bottom-14 bg-gray-900 text-white z-10">
+  <div class="md:hidden fixed inset-x-0 bottom-14 bg-gray-900 text-white z-10">
     <nav>
       <ul class="list-none flex justify-between w-full text-center">
         <li onclick="setHome()" class="flex-1">
@@ -118,28 +118,32 @@
     </nav>
   </div>
 
-  <!-- Alternative Mobile Music Controls -->
-  <div class="lg:hidden fixed inset-x-0 bottom-0 bg-gray-900 text-white z-20">
+  <!-- Mobile Music Controls -->
+  <div class="md:hidden fixed inset-x-0 bottom-0 bg-gray-900 text-white z-20">
     <div class="max-w-screen-xl mx-auto px-4 py-2">
       <!-- Mobile music control content here... -->
       <div class="flex items-center justify-between">
         <div class="flex items-center">
           <img id="playing-img-mobile" class="w-12 h-12 mr-3" src="{{ url_for('static', filename='default/cover.jpg') }}">
           <div>
-            <h3 id="playing-title-mobile" class="break-all text-lg font-semibold truncate">Play a song!</h3>
+            <h3 id="playing-title-mobile" class="break-all text-md font-semibold truncate">Play a song!</h3>
             <p id="playing-artist-mobile" class="truncate">VibeVault</p>
           </div>
         </div>
         <div class="flex items-center">
-          <button id="prev-button-mobile" class="mx-2">
+        <!--
+          <button  onclick="prevSong();" id="prev-btn-mobile" class="mx-2">
             <img src="{{ url_for('static', filename='svg/prev.svg')}}" class="w-10 h-10 active:scale-90">
           </button>
-          <button onclick="prevSong();" id="play-button-mobile" class="mx-2">
-            <img id="playPauseIcon-mobile" src="{{ url_for('static', filename='svg/paused.svg') }}" class="w-8 h-8 active:scale-90">
+        -->
+          <button  id="play-btn-mobile" class="mx-2">
+            <img id="play-btn-mobile" src="{{ url_for('static', filename='svg/paused.svg') }}" class="w-8 h-8 active:scale-90">
           </button>
-          <button onclick="nextSong()" id="next-button-mobile" class="mx-2">
+        <!--
+          <button onclick="nextSong()" id="next-btn-mobile" class="mx-2">
             <img src="{{ url_for('static', filename='svg/skip.svg')}}" class="w-10 h-10 active:scale-90">
           </button>
+        -->
         </div>
       </div>
     </div>
