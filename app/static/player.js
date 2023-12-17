@@ -58,7 +58,6 @@ function prevSong() {
         song = songHistory[songHistory.length - 1];
         setSong(song); // play the last song in history
         songHistory.pop(); // remove current song from history
-        queue.unshift(song)
     }
 }
 
