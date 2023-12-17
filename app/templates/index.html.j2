@@ -70,10 +70,10 @@
             <!-- Middle section: Playback Controls -->
             <div class="flex-grow flex flex-col justify-center">
               <div class="flex items-center justify-center">
-                <button id="prev-button" class="mx-2">
+                <button onclick="prevSong();" id="prev-button" class="mx-2">
                   <img src="{{ url_for('static', filename='svg/prev.svg')}}" class="w-10 h-10 active:scale-90">
                 </button>
-                <button onclick="prevSong();" id="play-button" class="mx-2">
+                <button id="play-button" class="mx-2">
                   <img id="playPauseIcon" src="{{ url_for('static', filename='svg/paused.svg') }}" class="w-8 h-8 active:scale-90">
                 </button>
                 <button onclick="nextSong()" id="next-button" class="mx-2">
