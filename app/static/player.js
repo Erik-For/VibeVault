@@ -55,10 +55,9 @@ function nextSong() {
 
 function prevSong() {
     if (songHistory.length > 0) { // check if there's a song to go back to
-        song = songHistory[songHistory.length - 1];
+        song = songHistory.pop();
         console.log(song);
         setSong(song); // play the last song in history
-        songHistory.pop(); // remove current song from history
     }
 }
 
