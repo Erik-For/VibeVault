@@ -30,8 +30,8 @@ if(window.innerWidth < 768){
 }
 
 
-const queue = [];
-const songHistory = []; // stack to keep track of played songs
+var queue = [];
+var songHistory = []; // stack to keep track of played songs
 var playingId = null;
 var selectedSong = null;
 
@@ -56,6 +56,7 @@ function nextSong() {
 function prevSong() {
     if (songHistory.length > 0) { // check if there's a song to go back to
         var song = songHistory.pop();
+        queue.unshift(playingId);
         console.log(song);
         setSong(song); // play the last song in history
     }
