@@ -1,22 +1,26 @@
 {% extends "base.html.j2" %}
+
 {% block head %}
-<script src="{{ url_for('static', filename='player.js')}}" defer></script>
+  <script src="{{ url_for('static', filename='player.js')}}" defer></script>
 {% endblock head %}
+
 {% block title %}
-VibeVault - Home
+  VibeVault - Home
 {% endblock title %}
+
 {% block body %}
-<style>
-body {
-  overflow: hidden;  
-}
-</style>
-<div class="bg-gray-800 flex flex-row min-h-screen">
+  <style>
+    body {
+      overflow: hidden;  
+    }
+  </style>
+
+  <div class="bg-gray-800 flex flex-row min-h-screen">
     <div class="w-60 bg-gray-900 p-5 hidden lg:block">
       <div class="mb-10">
         <!-- Logo -->
         <div class="flex flex-row justify-center">
-            <img type="svg" width="auto" height="10vh" src="{{ url_for('static', filename='svg/logo.svg') }}">
+          <img type="svg" width="auto" height="10vh" src="{{ url_for('static', filename='svg/logo.svg') }}">
         </div>
       </div>
       <!-- Navigation -->
@@ -29,9 +33,9 @@ body {
             <a class="active:scale-90 cursor-pointer text-white hover:text-slate-200">Search</a>
           </li>
           {% if current_user.is_admin() %}
-          <li class="mb-4">
-            <a href="{{ url_for('admin') }}" class="text-white hover:text-slate-200">Admin</a>
-          </li>
+            <li class="mb-4">
+              <a href="{{ url_for('admin') }}" class="text-white hover:text-slate-200">Admin</a>
+            </li>
           {% endif %}
           <!-- Additional navigation items -->
         </ul>
@@ -39,61 +43,107 @@ body {
     </div>
 
     <!-- Main Content -->
-    <div id="content" class="pb-24 h-screen block flex-1 min-h-0 overflow-auto">
-
-    </div>
+    <div id="content" class="pb-24 h-screen block flex-1 min-h-0 overflow-auto"></div>
   </div>
 
   <!-- Now Playing Bar (fixed at the bottom) -->
   <div class="fixed inset-x-0 bottom-0 bg-gray-900 p-4">
     <!-- audio player controls -->
     <audio id="audioPlayer" preload="none">
-        <source id="audioSource" src="" type="audio/mpeg">
+      <source id="audioSource" src="" type="audio/mpeg">
     </audio>
-    <div class="flex flex-row flex bg-gray-900 justify-between">
-        <div class="fixed inset-x-0 bottom-0 bg-gray-900 text-white">
-            <div class="max-w-screen-xl mx-auto px-4 py-2">
-                <div class="flex items-center justify-between">
-                    <!-- Left section: Song Information -->
-                    <div class="flex items-center">
-                        <img id="playing-img" class="w-12 h-12 mr-3" src="{{ url_for('static', filename='default/cover.jpg') }}">
-                        <div>
-                            <h3 id="playing-title" class="break-all text-lg font-semibold truncate">Play a song!</h3>
-                            <p id="playing-artist" class="truncate">VibeVault</p>
-                        </div>
-                    </div>
-                    <!-- Middle section: Playback Controls -->
-                    <div class="flex-grow flex flex-col justify-center">
-                        <div class="flex items-center justify-center">
-                            <button id="prev-button" class="mx-2">
-                                <img src="{{ url_for('static', filename='svg/prev.svg')}}" class="w-10 h-10 active:scale-90">
-                            </button>
-                            <button onclick="prevSong();" id="play-button" class="mx-2">
-                                <img id="playPauseIcon" src="{{ url_for('static', filename='svg/paused.svg') }}" class="w-8 h-8 active:scale-90">
-                            </button>
-                            <button onclick="nextSong()" id="next-button" class="mx-2">
-                                <img src="{{ url_for('static', filename='svg/skip.svg')}}" class="w-10 h-10 active:scale-90">
-                            </button>
-                        </div>
-                        <div id="progress-container" class="flex px-16 relative flex-1 cursor-pointer">
-                            <span class="pr-2" id="current-time">0:00</span>
-                            <input type="range" placeholder="0" id="progress-bar" class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer" min="0" value="0">
-                            <span class="pl-2" id="total-time">0:00</span>
-                        </div>
-                    </div>
-                    <!-- Right section: Volume & Other Controls -->
-                    <div class="flex flex-item flex-item-hide items-center">
-                        <button class="mx-2">
-                            <img src="{{ url_for('static', filename='svg/volume.svg') }}" class="w-6 h-6">
-                        </button>
-                        <div class="w-32">
-                            <input id="volume" type="range" class="cursor-pointer">
-                        </div>
-                    </div>
-                </div>
+    <div class="lg:block flex flex-row flex bg-gray-900 justify-between">
+      <div class="fixed inset-x-0 bottom-0 bg-gray-900 text-white">
+        <div class="max-w-screen-xl mx-auto px-4 py-2">
+          <div class="flex items-center justify-between">
+            <!-- Left section: Song Information -->
+            <div class="flex items-center">
+              <img id="playing-img" class="w-12 h-12 mr-3" src="{{ url_for('static', filename='default/cover.jpg') }}">
+              <div>
+                <h3 id="playing-title" class="break-all text-lg font-semibold truncate">Play a song!</h3>
+                <p id="playing-artist" class="truncate">VibeVault</p>
+              </div>
             </div>
+            <!-- Middle section: Playback Controls -->
+            <div class="flex-grow flex flex-col justify-center">
+              <div class="flex items-center justify-center">
+                <button id="prev-button" class="mx-2">
+                  <img src="{{ url_for('static', filename='svg/prev.svg')}}" class="w-10 h-10 active:scale-90">
+                </button>
+                <button onclick="prevSong();" id="play-button" class="mx-2">
+                  <img id="playPauseIcon" src="{{ url_for('static', filename='svg/paused.svg') }}" class="w-8 h-8 active:scale-90">
+                </button>
+                <button onclick="nextSong()" id="next-button" class="mx-2">
+                  <img src="{{ url_for('static', filename='svg/skip.svg')}}" class="w-10 h-10 active:scale-90">
+                </button>
+              </div>
+              <div id="progress-container" class="flex px-16 relative flex-1 cursor-pointer">
+                <span class="pr-2" id="current-time">0:00</span>
+                <input type="range" placeholder="0" id="progress-bar" class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer" min="0" value="0">
+                <span class="pl-2" id="total-time">0:00</span>
+              </div>
+            </div>
+            <!-- Right section: Volume & Other Controls -->
+            <div class="flex flex-item flex-item-hide items-center">
+              <button class="mx-2">
+                <img src="{{ url_for('static', filename='svg/volume.svg') }}" class="w-6 h-6">
+              </button>
+              <div class="w-32">
+                <input id="volume" type="range" class="cursor-pointer">
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
   </div>
+
+  <!-- Mobile Navigation -->
+  <div class="lg:hidden fixed inset-x-0 bottom-14 bg-gray-900 text-white z-10">
+    <nav>
+      <ul class="list-none flex justify-between w-full text-center">
+        <li onclick="setHome()" class="flex-1">
+          <a class="active:scale-90 cursor-pointer text-white hover:text-slate-200 block py-2">Home</a>
+        </li>
+        <li onclick="setSearch()" class="flex-1">
+          <a class="active:scale-90 cursor-pointer text-white hover:text-slate-200 block py-2">Search</a>
+        </li>
+        {% if current_user.is_admin() %}
+          <li class="flex-1">
+            <a href="{{ url_for('admin') }}" class="text-white hover:text-slate-200 block py-2">Admin</a>
+          </li>
+        {% endif %}
+        <!-- Additional navigation items -->
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Alternative Mobile Music Controls -->
+  <div class="lg:hidden fixed inset-x-0 bottom-0 bg-gray-900 text-white z-20">
+    <div class="max-w-screen-xl mx-auto px-4 py-2">
+      <!-- Mobile music control content here... -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <img id="playing-img-mobile" class="w-12 h-12 mr-3" src="{{ url_for('static', filename='default/cover.jpg') }}">
+          <div>
+            <h3 id="playing-title-mobile" class="break-all text-lg font-semibold truncate">Play a song!</h3>
+            <p id="playing-artist-mobile" class="truncate">VibeVault</p>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <button id="prev-button-mobile" class="mx-2">
+            <img src="{{ url_for('static', filename='svg/prev.svg')}}" class="w-10 h-10 active:scale-90">
+          </button>
+          <button onclick="prevSong();" id="play-button-mobile" class="mx-2">
+            <img id="playPauseIcon-mobile" src="{{ url_for('static', filename='svg/paused.svg') }}" class="w-8 h-8 active:scale-90">
+          </button>
+          <button onclick="nextSong()" id="next-button-mobile" class="mx-2">
+            <img src="{{ url_for('static', filename='svg/skip.svg')}}" class="w-10 h-10 active:scale-90">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   {% include 'context_menu.html.j2' %}
 {% endblock body %}
