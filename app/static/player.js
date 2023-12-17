@@ -30,8 +30,8 @@ if(window.innerWidth < 768){
 }
 
 
-var queue = [];
-var songHistory = []; // stack to keep track of played songs
+const queue = [];
+const songHistory = []; // stack to keep track of played songs
 var playingId = null;
 var selectedSong = null;
 
