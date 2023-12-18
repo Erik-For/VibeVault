@@ -4,9 +4,9 @@
     "display": "fullscreen",
     "icons": [
       {
-        "src": "/svg/logo.svg",
+        "src": "/svg/vibe.png",
         "sizes": "192x192",
-        "type": "image/svg+xml"
+        "type": "image/png"
       }
     ],
     "name": "VibeVault",
