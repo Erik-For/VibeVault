@@ -45,10 +45,6 @@
     <!-- Main Content -->
     <div id="content" class="pb-24 h-screen block flex-1 min-h-0 overflow-auto"></div>
   </div>
-
-  <div class="md:hidden mt-10 w-full">
-      &nbsp;
-  </div>
   <!-- Now Playing Bar (fixed at the bottom) -->
   <div class="fixed hidden md:block inset-x-0 bottom-0 bg-gray-900 p-4">
     <!-- audio player controls -->
@@ -109,11 +105,11 @@
           <a class="active:scale-90 cursor-pointer text-white hover:text-slate-200 block py-4">Home</a>
         </li>
         <li onclick="setSearch()" class="flex-1">
-          <a class="active:scale-90 cursor-pointer text-white hover:text-slate-200 block py-2">Search</a>
+          <a class="active:scale-90 cursor-pointer text-white hover:text-slate-200 block py-4">Search</a>
         </li>
         {% if current_user.is_admin() %}
           <li class="flex-1">
-            <a href="{{ url_for('admin') }}" class="text-white hover:text-slate-200 block py-2">Admin</a>
+            <a href="{{ url_for('admin') }}" class="text-white hover:text-slate-200 block py-4">Admin</a>
           </li>
         {% endif %}
         <!-- Additional navigation items -->
