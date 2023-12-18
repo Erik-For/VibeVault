@@ -1,0 +1,15 @@
+{
+    "background_color": "white",
+    "description": "A Vault full of vibes",
+    "display": "fullscreen",
+    "icons": [
+      {
+        "src": "/svg/logo.svg",
+        "sizes": "192x192",
+        "type": "image/svg+xml"
+      }
+    ],
+    "name": "VibeVault",
+    "short_name": "VibeVault",
+    "start_url": "/"
+  }
