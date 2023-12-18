@@ -50,7 +50,7 @@
       &nbsp;
   </div>
   <!-- Now Playing Bar (fixed at the bottom) -->
-  <div class="fixed inset-x-0 bottom-0 bg-gray-900 p-4">
+  <div class="fixed hidden md:block inset-x-0 bottom-0 bg-gray-900 p-4">
     <!-- audio player controls -->
     <audio id="audioPlayer" preload="none">
       <source id="audioSource" src="" type="audio/mpeg">
@@ -63,7 +63,7 @@
             <div class="flex items-center">
               <img id="playing-img" class="w-12 h-12 mr-3" src="{{ url_for('static', filename='default/cover.jpg') }}">
               <div>
-                <h3 id="playing-title" class="break-all text-md font-semibold truncate">Play a song!</h3>
+                <h3 style="max-width: 30vw;" id="playing-title" class="break-all text-md font-semibold truncate">Play a song!</h3>
                 <p id="playing-artist" class="truncate">VibeVault</p>
               </div>
             </div>
@@ -102,11 +102,11 @@
   </div>
 
   <!-- Mobile Navigation -->
-  <div class="md:hidden fixed inset-x-0 bottom-14 bg-gray-900 text-white z-10">
+  <div class="md:hidden fixed inset-x-0 bottom-0 bg-gray-900 text-white z-10">
     <nav>
       <ul class="list-none flex justify-between w-full text-center">
         <li onclick="setHome()" class="flex-1">
-          <a class="active:scale-90 cursor-pointer text-white hover:text-slate-200 block py-2">Home</a>
+          <a class="active:scale-90 cursor-pointer text-white hover:text-slate-200 block py-4">Home</a>
         </li>
         <li onclick="setSearch()" class="flex-1">
           <a class="active:scale-90 cursor-pointer text-white hover:text-slate-200 block py-2">Search</a>
@@ -122,7 +122,7 @@
   </div>
 
   <!-- Mobile Music Controls -->
-  <div class="md:hidden fixed inset-x-0 bottom-0 bg-gray-900 text-white z-20">
+  <div class="md:hidden fixed inset-x-0 bottom-14 bg-gray-900 text-white z-20">
     <div class="max-w-screen-xl mx-auto px-4 py-2">
       <!-- Mobile music control content here... -->
       <div class="flex items-center justify-between">
