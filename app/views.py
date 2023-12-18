@@ -21,7 +21,7 @@ def unauthorized():
 
 #index path
 @app.route("/")
-@login_required # makes sure the user is logged in
+#@login_required # makes sure the user is logged in
 def index():
     return render_template("verify.html.j2")
 
