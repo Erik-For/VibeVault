@@ -20,7 +20,7 @@ class User(db.Model, UserMixin):
         self.set_password(password)
 
     def is_admin(self):
-        return (self.usertype >= 1)
+        return (self.usertype == 1 || self.usertype == 2)
 
     def is_super_user(self):
         return (self.usertype == 2)
