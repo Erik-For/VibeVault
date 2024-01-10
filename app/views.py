@@ -8,7 +8,7 @@ from flask import render_template
 
 login_manager = LoginManager(app)
 
-CONTENT_FOLDER = os.getcwd() + "/instance/"
+CONTENT_FOLDER = os.getenv('CONTENT_FOLDER', os.getcwd() + "/instance/")
 
 #connect the flask_login library to the database User model
 @login_manager.user_loader
