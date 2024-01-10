@@ -1,7 +1,7 @@
 from flask import request, redirect, url_for, render_template, flash, send_from_directory, Response, stream_with_context, send_file, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from app import app, db, mail
-from app.models import User, Artist, Content, FeaturedContent, FeaturedArtists, Invite, ResetPassword, ArtistManagementAccount
+from app.models import User, Artist, Content, FeaturedContent, FeaturedArtists, Invite, ResetPassword
 from flask_mail import Mail, Message
 import os
 from flask import render_template
