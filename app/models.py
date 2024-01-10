@@ -60,6 +60,7 @@ class Artist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
     contents = db.relationship('Content', backref='artist', lazy='dynamic')
+    verified = db.Column(db.Boolean, default=True)
 
 class Content(db.Model):
     __tablename__ = 'contents'
