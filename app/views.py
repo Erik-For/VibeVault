@@ -80,7 +80,7 @@ def forgot_password():
             db.session.add(reset_password)
             db.session.commit()
             msg = Message(
-                subject="Invite to VibeVault",
+                subject="Reset your password",
                 recipients=[email],
                 body=f"Reset your password: https://vibevault.se/reset_password/{reset_password.email_verification_token}",
             )
