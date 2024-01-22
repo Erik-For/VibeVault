@@ -131,6 +131,7 @@ def contet_cover(id):
 #     return response
 def stream_audio(file_path, start, length):
     with open(file_path, "rb") as audio_file:
+        audio_file.seek(start);
         yield audio_file.read(length)
 
 
@@ -153,8 +154,8 @@ def content_stream(id):
         response = Response(stream_with_context(stream_audio(file_path, start, length)), mimetype="audio/mpeg")
         response.headers['Content-Range'] = f'bytes {start}-{end}/{file_size}'
         response.headers['Content-Length'] = str(length)
-        response.headers['Accept-Ranges'] = 'bytes'
-        response.headers['Cache-Control'] = 'no-cache'
+    response.headers['Accept-Ranges'] = 'bytes'
+    response.headers['Cache-Control'] = 'no-cache'
     response.status_code = 206
 
     return response
